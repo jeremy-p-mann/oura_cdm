@@ -3,7 +3,7 @@ from pandera.typing import Series, DateTime
 
 
 class SleepObservationSchema(pa.SchemaModel):
-    observation_id: Series[int]
+    observation_id: Series[int] = pa.Field(unique=True)
     person_id: Series[int]
     observation_concept_id: Series[int]
     observation_date: Series[str]
