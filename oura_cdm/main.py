@@ -1,8 +1,9 @@
-import os
-import sys
+from oura_cdm.pipeline import run, validate_run, write_artifacts
+from oura_cdm.parse_cli import get_pipeline_inputs
+
 
 if __name__ == "__main__":
-    target_folder_name = sys.argv[1]
-    os.makedirs(target_folder_name, mode=0o777,)
-    assert target_folder_name in os.listdir()
-
+    inputs = get_pipeline_inputs()
+    artifacts = run(**inputs)
+    validate_run(artifacts)
+    write_artifacts(artifacts, inputs['target_folder_name'])
