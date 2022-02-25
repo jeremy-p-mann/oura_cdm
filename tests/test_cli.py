@@ -2,6 +2,8 @@ import os
 
 import pytest
 
+from oura_cdm.pipeline import clean_up_run
+
 
 @pytest.yield_fixture()
 def target_folder_name():
@@ -14,9 +16,7 @@ def etl_process(target_folder_name):
         os.rmdir(target_folder_name)
     status = os.system(f'python3 oura_cdm/main.py {target_folder_name}')
     yield status
-
-    os.rmdir(target_folder_name)
-    assert target_folder_name not in os.listdir()
+    clean_up_run(target_folder_name)
 
 
 def test_cli_creates_folder(etl_process, target_folder_name):
