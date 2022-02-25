@@ -3,16 +3,19 @@ from typing import Dict, Any
 
 import pandas as pd
 
+from oura_cdm.schemas import SleepObservationSchema
+from oura_cdm.observation import get_observation_table
+
 
 def validate_run(artifacts: Dict[str, Any]):
-    assert isinstance(artifacts['observation_df'], pd.DataFrame)
+    SleepObservationSchema.validate(artifacts['observation_df'])
 
 
 def run(
     target_folder_name: str
 ):
     artifacts: Dict[str, Any] = {
-        "observation_df": pd.DataFrame([])
+        "observation_df": get_observation_table()
     }
     return artifacts
 

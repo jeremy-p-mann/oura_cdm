@@ -12,7 +12,7 @@ def pipeline_inputs():
     }
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def artifacts(pipeline_inputs):
     return run(**pipeline_inputs)
 
