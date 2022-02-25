@@ -18,4 +18,4 @@ jobs:
           pip install -e .
           pip install pytest
 
-      - run: pipenv run pytest
+      - run: pytest
