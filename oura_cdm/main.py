@@ -7,5 +7,3 @@ if __name__ == "__main__":
     artifacts = run(**inputs)
     validate_run(artifacts)
     write_artifacts(artifacts, inputs['target_folder_name'])
-
-
