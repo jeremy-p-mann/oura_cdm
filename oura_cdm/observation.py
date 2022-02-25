@@ -1,11 +1,13 @@
 import pandas as pd
 
+from oura_cdm.concepts import SleepConcept
+
 
 def get_observation_table() -> pd.DataFrame:
     return pd.DataFrame({
         "observation_id": [123124],
         "person_id": [1234151],
-        "observation_concept_id": [1234142],
+        "observation_concept_id": [SleepConcept.REM_SLEEP_DURATION.value],
         "observation_date": ['20220206'],
         "observation_datetime": [pd.Timestamp('2017-01-01T12')],
         "observation_type_concept_id": [1234152],
