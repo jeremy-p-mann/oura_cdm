@@ -12,7 +12,7 @@ class SleepObservationSchema(pa.SchemaModel):
     observation_datetime: Series[DateTime] = pa.Field(nullable=True)
     observation_type_concept_id: Series[int]
     value_as_number: Series[float] = pa.Field(nullable=True)
-    value_as_string: Series[int] = pa.Field(nullable=True)
+    value_as_string: Series[str] = pa.Field(nullable=True)
     value_as_concept_id: Series[int] = pa.Field(nullable=True)
     qualifier_concept_id: Series[int] = pa.Field(nullable=True)
     unit_concept_id: Series[int] = pa.Field(nullable=True)

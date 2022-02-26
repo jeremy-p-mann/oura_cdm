@@ -31,7 +31,6 @@ def get_mock_row() -> pd.DataFrame:
         "obs_event_field_concept_id": [None]
     }).astype({
         "value_as_number": 'float',
-        "value_as_string": 'Int64',
         "value_as_concept_id": 'Int64',
         "qualifier_concept_id": 'Int64',
         "unit_concept_id": 'Int64',
