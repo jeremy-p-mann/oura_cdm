@@ -3,7 +3,7 @@ from typing import Dict, List
 
 import pandas as pd
 
-from oura_cdm.concepts import SleepConcept, OuraKeywords
+from oura_cdm.concepts import OuraKeywords, SleepConcept
 
 
 def get_mock_row() -> pd.DataFrame:
@@ -69,6 +69,8 @@ class ObservationTransformer():
                 new_row.loc[:, 'observation_date'] = self.get_observation_date(
                     i)
                 new_row.loc[:, 'observation_concept_id'] = concept.value
+                new_row.loc[:, 'value_as_number'] = self.get_observation_value(
+                    i, concept)
                 rows.append(new_row)
         ans = pd.concat(rows)
         return ans
@@ -81,8 +83,7 @@ class ObservationTransformer():
     ) -> int:
         return sleep_concept.value * (1 + index)
 
-    def get_observation_value(self, concept: SleepConcept) -> float:
-        return self.raw_oura_data[
+    def get_observation_value(self, index: int, concept: SleepConcept) -> float:
+        return float(self.raw_oura_data[index][
             OuraKeywords.get_keyword_from_concept(concept)
-        ]
-
+        ])
