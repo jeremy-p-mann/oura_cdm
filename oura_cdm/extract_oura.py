@@ -1,14 +1,15 @@
-from typing import Dict
 import os
+from datetime import date
+from typing import Dict
 
 import requests
-from datetime import date
 
 
 def get_token() -> str:
     return os.environ['OURA_TOKEN']
 
-def get_oura_data(token: str=None, start_date=None, end_date=None) -> Dict:
+
+def get_oura_data(token: str = None, start_date=None, end_date=None) -> Dict:
     if token is None:
         token = get_token()
     if end_date is None:
