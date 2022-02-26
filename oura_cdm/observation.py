@@ -1,12 +1,13 @@
+from dataclasses import dataclass
 from typing import Dict, List
 
 import pandas as pd
 
-from oura_cdm.concepts import SleepConcept
+from oura_cdm.concepts import SleepConcept, OuraKeywords
 
 
 def get_mock_row() -> pd.DataFrame:
-    row =  pd.DataFrame({
+    row = pd.DataFrame({
         "observation_id": [123124],
         "person_id": [1234151],
         "observation_concept_id": [SleepConcept.REM_SLEEP_DURATION.value],
@@ -49,13 +50,39 @@ def get_mock_row() -> pd.DataFrame:
 
 
 def get_observation_table(raw_oura_data: List[Dict]) -> pd.DataFrame:
-    mock_row = get_mock_row()
-    rows = []
-    for i, day in enumerate(raw_oura_data):
-        for j, concept in enumerate(SleepConcept):
-            new_row = mock_row.copy()
-            big_i = 1000 * i
-            new_row.loc[:, 'observation_id'] = big_i + j
-            rows.append(new_row)
-    ans = pd.concat(rows)
-    return ans
+    transformer = ObservationTransformer(raw_oura_data)
+    return transformer.get_transformed_data()
+
+
+@dataclass
+class ObservationTransformer():
+    raw_oura_data: List[Dict]
+
+    def get_transformed_data(self,) -> pd.DataFrame:
+        mock_row = get_mock_row()
+        rows = []
+        for i, day in enumerate(self.raw_oura_data):
+            for j, concept in enumerate(SleepConcept):
+                new_row = mock_row.copy()
+                new_row.loc[:, 'observation_id'] = self.get_observation_id(
+                    concept, i)
+                new_row.loc[:, 'observation_date'] = self.get_observation_date(
+                    i)
+                new_row.loc[:, 'observation_concept_id'] = concept.value
+                rows.append(new_row)
+        ans = pd.concat(rows)
+        return ans
+
+    def get_observation_date(self, index: int) -> str:
+        return self.raw_oura_data[index][OuraKeywords.DATE]
+
+    def get_observation_id(
+        self, sleep_concept: SleepConcept, index: int
+    ) -> int:
+        return sleep_concept.value * (1 + index)
+
+    def get_observation_value(self, concept: SleepConcept) -> float:
+        return self.raw_oura_data[
+            OuraKeywords.get_keyword_from_concept(concept)
+        ]
+
