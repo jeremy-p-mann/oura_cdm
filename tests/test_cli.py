@@ -6,11 +6,6 @@ from oura_cdm.pipeline import clean_up_run
 
 
 @pytest.fixture(scope='session')
-def target_folder_name():
-    return 'sleep_data_test'
-
-
-@pytest.fixture(scope='session')
 def etl_process(target_folder_name):
     if target_folder_name in os.listdir():
         clean_up_run(target_folder_name)
