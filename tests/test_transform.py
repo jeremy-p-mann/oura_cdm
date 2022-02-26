@@ -52,3 +52,17 @@ def test_observation_values(
     assert len(expecteds) == 1
     expected = expecteds.iloc[0]
     assert actual == expected
+
+
+def test_source_value(
+    raw_observation_date, raw_observation, observation_df,
+    concept
+):
+    actual = raw_observation[OuraKeywords.get_keyword_from_concept(concept)]
+    expecteds = observation_df[
+        (observation_df.observation_date == raw_observation_date)
+        * (observation_df.observation_concept_id == concept)
+    ].value_source_value
+    assert len(expecteds) == 1
+    expected = expecteds.iloc[0]
+    assert actual == expected

@@ -70,6 +70,8 @@ class ObservationTransformer():
                 new_row.loc[:, 'observation_concept_id'] = concept.value
                 new_row.loc[:, 'value_as_number'] = self.get_observation_value(
                     i, concept)
+                new_row.loc[:, 'value_source_value'] = self.get_value_source_value(
+                    i, concept)
                 rows.append(new_row)
         ans = pd.concat(rows)
         return ans
@@ -83,6 +85,9 @@ class ObservationTransformer():
         return sleep_concept.value * (1 + index)
 
     def get_observation_value(self, index: int, concept: SleepConcept) -> float:
+        return self.get_value_source_value(index, concept)
+
+    def get_value_source_value(self, index: int, concept: SleepConcept) -> float:
         return float(self.raw_oura_data[index][
             OuraKeywords.get_keyword_from_concept(concept)
         ])
