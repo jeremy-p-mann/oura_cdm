@@ -17,7 +17,7 @@ def get_token() -> Optional[str]:
     return None
 
 
-def _get_mock_oura_data() -> Optional[str]:
+def _get_mock_oura_data() -> List[Dict]:
     with open('mocks/mock_sleep_data.json', 'rb') as f:
         ans = json.load(f)
     return ans
