@@ -5,19 +5,19 @@ import pytest
 from oura_cdm.pipeline import clean_up_run, run, validate_run
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def pipeline_inputs():
     return {
         "target_folder_name": "sleep_data_test"
     }
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def artifacts(pipeline_inputs):
     return run(**pipeline_inputs)
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def observation_df(artifacts):
     return artifacts['observation_df']
 

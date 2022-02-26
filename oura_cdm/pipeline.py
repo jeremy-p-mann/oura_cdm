@@ -1,10 +1,11 @@
 import os
-from typing import Dict, Any
+from typing import Any, Dict
 
 import pandas as pd
 
-from oura_cdm.schemas import SleepObservationSchema
+from oura_cdm.extract_oura import get_oura_data
 from oura_cdm.observation import get_observation_table
+from oura_cdm.schemas import SleepObservationSchema
 
 
 def validate_run(artifacts: Dict[str, Any]):
@@ -14,8 +15,10 @@ def validate_run(artifacts: Dict[str, Any]):
 def run(
     target_folder_name: str
 ):
+    raw_oura_data = get_oura_data()
+    observation_df = get_observation_table(raw_oura_data)
     artifacts: Dict[str, Any] = {
-        "observation_df": get_observation_table()
+        "observation_df": observation_df
     }
     return artifacts
 

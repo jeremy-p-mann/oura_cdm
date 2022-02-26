@@ -5,17 +5,16 @@ import pytest
 from oura_cdm.pipeline import clean_up_run
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def target_folder_name():
     return 'sleep_data_test'
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
 def etl_process(target_folder_name):
     if target_folder_name in os.listdir():
         clean_up_run(target_folder_name)
     status = os.system(f'python3 oura_cdm/main.py {target_folder_name}')
-    print(os.listdir())
     yield status
     clean_up_run(target_folder_name)
 

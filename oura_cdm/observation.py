@@ -1,10 +1,12 @@
+from typing import Dict, List
+
 import pandas as pd
 
 from oura_cdm.concepts import SleepConcept
 
 
-def get_observation_table() -> pd.DataFrame:
-    return pd.DataFrame({
+def get_mock_row() -> pd.DataFrame:
+    row =  pd.DataFrame({
         "observation_id": [123124],
         "person_id": [1234151],
         "observation_concept_id": [SleepConcept.REM_SLEEP_DURATION.value],
@@ -42,5 +44,18 @@ def get_observation_table() -> pd.DataFrame:
         "value_source_value": 'str',
         "observation_event_id": 'Int64',
         "obs_event_field_concept_id": 'Int64'
-    }
-    )
+    })
+    return row
+
+
+def get_observation_table(raw_oura_data: List[Dict]) -> pd.DataFrame:
+    mock_row = get_mock_row()
+    rows = []
+    for i, day in enumerate(raw_oura_data):
+        for j, concept in enumerate(SleepConcept):
+            new_row = mock_row.copy()
+            big_i = 1000 * i
+            new_row.loc[:, 'observation_id'] = big_i + j
+            rows.append(new_row)
+    ans = pd.concat(rows)
+    return ans
