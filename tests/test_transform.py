@@ -40,15 +40,15 @@ def test_observation_date(raw_observation_date, observation_df):
     assert raw_observation_date in observation_dates
 
 
-def test_observation_rem(
+def test_observation_values(
     raw_observation_date, raw_observation, observation_df,
     concept
 ):
     actual = raw_observation[OuraKeywords.get_keyword_from_concept(concept)]
-    expected_ids = observation_df[
+    expecteds = observation_df[
         (observation_df.observation_date == raw_observation_date)
         * (observation_df.observation_concept_id == concept)
-    ].observation_id
-    assert len(expected_ids) == 1
-    # import pdb; pdb.set_trace()
-    # expected = observation_df.value_as_number[expected_ids.iloc[0]]
+    ].value_as_number
+    assert len(expecteds) == 1
+    expected = expecteds.iloc[0]
+    assert actual == expected
