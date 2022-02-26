@@ -15,6 +15,10 @@ class SleepConcept(IntEnum):
         return 32880
 
 
+class ObservationTypeConcept(IntEnum):
+    LAB = 32856
+
+
 class OuraKeywords(str, Enum):
     """
     Strings referenced in Oura's API

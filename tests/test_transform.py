@@ -1,6 +1,6 @@
 import pytest
 
-from oura_cdm.concepts import SleepConcept, OuraKeywords
+from oura_cdm.concepts import SleepConcept, OuraKeywords, ObservationTypeConcept
 from oura_cdm.observation import get_observation_table
 from oura_cdm.schemas import SleepObservationSchema
 
@@ -66,3 +66,14 @@ def test_source_value(
     assert len(expecteds) == 1
     expected = expecteds.iloc[0]
     assert actual == expected
+def test_observation_type_is_valid(
+    raw_observation_date, raw_observation, observation_df,
+    concept
+):
+    actuals = observation_df[
+        (observation_df.observation_date == raw_observation_date)
+        * (observation_df.observation_concept_id == concept)
+    ].observation_type_concept_id
+    assert len(actuals) == 1
+    actual = actuals.iloc[0]
+    assert actual in {c.value for c in ObservationTypeConcept}
