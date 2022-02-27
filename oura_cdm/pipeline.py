@@ -17,6 +17,7 @@ def validate_run(artifacts: Dict[str, Any]):
 
 
 def run(target_folder_name: str):
+    # TODO This doesn't need target folder why is it here
     log_info_p('Beginning Run')
     raw_oura_data = get_oura_data()
     observation_df = get_observation_table(raw_oura_data)
