@@ -14,9 +14,18 @@ class SleepConcept(IntEnum):
             cls, sleep_concept: SleepConcept) -> int:
         return 32880
 
+    @classmethod
+    def get_unit_source_id(
+            cls, concept: SleepConcept) -> UnitConcept:
+        return UnitConcept.SECOND
+
 
 class ObservationTypeConcept(IntEnum):
     LAB = 32856
+
+
+class UnitConcept(IntEnum):
+    SECOND = 8555
 
 
 class OuraKeywords(str, Enum):

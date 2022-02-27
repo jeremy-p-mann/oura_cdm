@@ -26,6 +26,16 @@ def concept(request,):
     return request.param
 
 
+@pytest.fixture
+def observation_dict(concept, observation_df, raw_observation_date):
+    expecteds = observation_df[
+        (observation_df.observation_date == raw_observation_date)
+        * (observation_df.observation_concept_id == concept)
+    ]
+    assert len(expecteds) == 1
+    return dict(expecteds.iloc[0, :])
+
+
 def test_observation_table_schema(observation_df):
     SleepObservationSchema.validate(observation_df)
 
@@ -51,7 +61,7 @@ def test_observation_values(
     ].value_as_number
     assert len(expecteds) == 1
     expected = expecteds.iloc[0]
-    assert actual == expected
+    assert float(actual) == expected
 
 
 def test_source_value(
@@ -65,7 +75,19 @@ def test_source_value(
     ].value_source_value
     assert len(expecteds) == 1
     expected = expecteds.iloc[0]
+    try:
+        expected = int(expected)
+    except ValueError:
+        pass
     assert actual == expected
+
+
+def test_units(
+    observation_dict, concept
+):
+    assert observation_dict['unit_concept_id'] == SleepConcept.get_unit_source_id(concept)
+
+
 def test_observation_type_is_valid(
     raw_observation_date, raw_observation, observation_df,
     concept
@@ -77,3 +99,10 @@ def test_observation_type_is_valid(
     assert len(actuals) == 1
     actual = actuals.iloc[0]
     assert actual in {c.value for c in ObservationTypeConcept}
+
+
+@pytest.mark.skip
+def test_observation_datetime(
+        observation_dict
+):
+    assert False
