@@ -1,20 +1,22 @@
 from dataclasses import dataclass
+from functools import partial
 from typing import Dict, List
 
 import pandas as pd
 
-from oura_cdm.concepts import (
-    OuraKeywords,
-    SleepConcept,
-    ObservationTypeConcept
-)
+from oura_cdm.concepts import (ObservationConcept, ObservationTypeConcept,
+                               OuraKeywords)
+from oura_cdm.logs import log_info, log_warning
+
+log_info_o = partial(log_info, **{'name': __name__})
+log_warning_o = partial(log_warning, **{'name': __name__})
 
 
 def get_mock_row() -> pd.DataFrame:
     row = pd.DataFrame({
         "observation_id": [123124],
         "person_id": [1234151],
-        "observation_concept_id": [SleepConcept.REM_SLEEP_DURATION.value],
+        "observation_concept_id": [ObservationConcept.REM_SLEEP_DURATION.value],
         "observation_date": ['20220206'],
         "observation_datetime": [pd.Timestamp('2017-01-01T12')],
         "observation_type_concept_id": [1234152],
@@ -53,8 +55,11 @@ def get_mock_row() -> pd.DataFrame:
 
 
 def get_observation_table(raw_oura_data: List[Dict]) -> pd.DataFrame:
+    log_info_o('Creating observation table')
     transformer = ObservationTransformer(raw_oura_data)
-    return transformer.get_transformed_data()
+    transformed_data = transformer.get_transformed_data()
+    log_info_o('Observation table successfully created')
+    return transformed_data
 
 
 @dataclass
@@ -65,7 +70,7 @@ class ObservationTransformer():
         mock_row = get_mock_row()
         rows = []
         for i, day in enumerate(self.raw_oura_data):
-            for j, concept in enumerate(SleepConcept):
+            for j, concept in enumerate(ObservationConcept):
                 new_row = mock_row.copy()
                 new_row.loc[:, 'observation_id'] = self.get_observation_id(
                     concept, i)
@@ -88,20 +93,20 @@ class ObservationTransformer():
         return self.raw_oura_data[index][OuraKeywords.DATE]
 
     def get_observation_id(
-        self, sleep_concept: SleepConcept, index: int
+        self, sleep_concept: ObservationConcept, index: int
     ) -> int:
         return sleep_concept.value * (1 + index)
 
-    def get_observation_value(self, index: int, concept: SleepConcept) -> float:
+    def get_observation_value(self, index: int, concept: ObservationConcept) -> float:
         return float(self.get_value_source_value(index, concept))
 
-    def get_value_source_value(self, index: int, concept: SleepConcept) -> str:
+    def get_value_source_value(self, index: int, concept: ObservationConcept) -> str:
         return str(self.raw_oura_data[index][
             OuraKeywords.get_keyword_from_concept(concept)
         ])
 
-    def get_observation_type_id(self, index: int, concept: SleepConcept) -> int:
+    def get_observation_type_id(self, index: int, concept: ObservationConcept) -> int:
         return ObservationTypeConcept.LAB.value
 
-    def get_unit_concept_id(self, index: int, concept: SleepConcept) -> int:
-        return SleepConcept.get_unit_source_id(concept).value
+    def get_unit_concept_id(self, index: int, concept: ObservationConcept) -> int:
+        return ObservationConcept.get_unit_source_id(concept).value
