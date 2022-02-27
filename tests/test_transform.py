@@ -17,6 +17,11 @@ def raw_observation(oura_data):
 
 
 @pytest.fixture
+def raw_observation_value(raw_observation, concept):
+    return raw_observation[OuraKeywords.get_keyword_from_concept(concept)]
+
+
+@pytest.fixture
 def raw_observation_date(raw_observation):
     return raw_observation[OuraKeywords.DATE]
 
@@ -50,36 +55,17 @@ def test_observation_date(raw_observation_date, observation_df):
     assert raw_observation_date in observation_dates
 
 
-def test_observation_values(
-    raw_observation_date, raw_observation, observation_df,
-    concept
-):
-    actual = raw_observation[OuraKeywords.get_keyword_from_concept(concept)]
-    expecteds = observation_df[
-        (observation_df.observation_date == raw_observation_date)
-        * (observation_df.observation_concept_id == concept)
-    ].value_as_number
-    assert len(expecteds) == 1
-    expected = expecteds.iloc[0]
-    assert float(actual) == expected
+def test_observation_values(observation_dict, raw_observation_value):
+    assert float(raw_observation_value) == observation_dict['value_as_number']
 
 
-def test_source_value(
-    raw_observation_date, raw_observation, observation_df,
-    concept
-):
-    actual = raw_observation[OuraKeywords.get_keyword_from_concept(concept)]
-    expecteds = observation_df[
-        (observation_df.observation_date == raw_observation_date)
-        * (observation_df.observation_concept_id == concept)
-    ].value_source_value
-    assert len(expecteds) == 1
-    expected = expecteds.iloc[0]
+def test_source_value(observation_dict, raw_observation_value):
+    expected = observation_dict['value_source_value']
     try:
         expected = int(expected)
     except ValueError:
         pass
-    assert actual == expected
+    assert raw_observation_value == expected
 
 
 def test_units(
@@ -88,17 +74,9 @@ def test_units(
     assert observation_dict['unit_concept_id'] == SleepConcept.get_unit_source_id(concept)
 
 
-def test_observation_type_is_valid(
-    raw_observation_date, raw_observation, observation_df,
-    concept
-):
-    actuals = observation_df[
-        (observation_df.observation_date == raw_observation_date)
-        * (observation_df.observation_concept_id == concept)
-    ].observation_type_concept_id
-    assert len(actuals) == 1
-    actual = actuals.iloc[0]
-    assert actual in {c.value for c in ObservationTypeConcept}
+def test_observation_type_is_valid(observation_dict):
+    type_id = observation_dict['observation_type_concept_id']
+    assert type_id in {c.value for c in ObservationTypeConcept}
 
 
 @pytest.mark.skip
