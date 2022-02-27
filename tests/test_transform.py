@@ -1,6 +1,7 @@
 import pytest
 
-from oura_cdm.concepts import SleepConcept, OuraKeywords, ObservationTypeConcept
+from oura_cdm.concepts import (ObservationTypeConcept, OuraKeywords,
+                               ObservationConcept)
 from oura_cdm.observation import get_observation_table
 from oura_cdm.schemas import SleepObservationSchema
 
@@ -26,7 +27,7 @@ def raw_observation_date(raw_observation):
     return raw_observation[OuraKeywords.DATE]
 
 
-@pytest.fixture(params=list(SleepConcept))
+@pytest.fixture(params=list(ObservationConcept))
 def concept(request,):
     return request.param
 
@@ -46,7 +47,7 @@ def test_observation_table_schema(observation_df):
 
 
 def test_n_observations(oura_data, observation_df):
-    n_sleep_concepts = len(SleepConcept)
+    n_sleep_concepts = len(ObservationConcept)
     assert len(observation_df) == n_sleep_concepts * len(oura_data)
 
 
@@ -68,10 +69,9 @@ def test_source_value(observation_dict, raw_observation_value):
     assert raw_observation_value == expected
 
 
-def test_units(
-    observation_dict, concept
-):
-    assert observation_dict['unit_concept_id'] == SleepConcept.get_unit_source_id(concept)
+def test_units(observation_dict, concept):
+    unit_id = observation_dict['unit_concept_id']
+    assert unit_id == ObservationConcept.get_unit_source_id(concept)
 
 
 def test_observation_type_is_valid(observation_dict):
