@@ -55,10 +55,10 @@ def get_mock_row() -> pd.DataFrame:
 
 
 def get_observation_table(raw_oura_data: List[Dict]) -> pd.DataFrame:
-    log_info_o('Beginnning data transformation')
+    log_info_o('Creating observation table')
     transformer = ObservationTransformer(raw_oura_data)
     transformed_data = transformer.get_transformed_data()
-    log_info_o('Transformation sucessful')
+    log_info_o('Observation table successfully created')
     return transformed_data
 
 

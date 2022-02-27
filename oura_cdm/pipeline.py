@@ -28,12 +28,15 @@ def run(target_folder_name: str):
 
 
 def write_artifacts(artifacts: Dict[str, Any], target_folder_name: str):
-    log_info_p('Writing Artifacts Successful')
+    log_info_p('Writing artifacts')
     os.makedirs(target_folder_name, mode=0o777,)
+    observation_table_filepath = f'{target_folder_name}/observation.csv'
+    log_info_p('Writing observation table')
     artifacts['observation_df'].to_csv(
-        f'{target_folder_name}/observation.csv',
+        observation_table_filepath,
         sep='\t'
     )
+    log_info_p(f'Observation table written to {observation_table_filepath}')
     log_info_p(
         f'Artifacts Successfully written to folder {target_folder_name}')
 
