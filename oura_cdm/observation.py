@@ -1,13 +1,15 @@
 from dataclasses import dataclass
+from functools import partial
 from typing import Dict, List
 
 import pandas as pd
 
-from oura_cdm.concepts import (
-    OuraKeywords,
-    ObservationConcept,
-    ObservationTypeConcept
-)
+from oura_cdm.concepts import (ObservationConcept, ObservationTypeConcept,
+                               OuraKeywords)
+from oura_cdm.logs import log_info, log_warning
+
+log_info_o = partial(log_info, **{'name': __name__})
+log_warning_o = partial(log_warning, **{'name': __name__})
 
 
 def get_mock_row() -> pd.DataFrame:
@@ -53,8 +55,11 @@ def get_mock_row() -> pd.DataFrame:
 
 
 def get_observation_table(raw_oura_data: List[Dict]) -> pd.DataFrame:
+    log_info_o('Beginnning data transformation')
     transformer = ObservationTransformer(raw_oura_data)
-    return transformer.get_transformed_data()
+    transformed_data = transformer.get_transformed_data()
+    log_info_o('Transformation sucessful')
+    return transformed_data
 
 
 @dataclass
