@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from enum import IntEnum, Enum
+from enum import Enum, IntEnum
 
 
 class ObservationConcept(IntEnum):
-    # TODO rename to concept to 
+    # TODO rename to concept to
     REM_SLEEP_DURATION = 1001480
     LIGHT_SLEEP_DURATION = 1001932
     DEEP_SLEEP_DURATION = 1001771
@@ -12,20 +12,32 @@ class ObservationConcept(IntEnum):
     @classmethod
     def get_observation_type_concept_id(
             cls, sleep_concept: ObservationConcept) -> int:
-        return 32880
+        return ObservationTypeConcept.LAB
 
     @classmethod
     def get_unit_source_id(
             cls, concept: ObservationConcept) -> UnitConcept:
         return UnitConcept.SECOND
 
+    @classmethod
+    def get_domain_id(cls,) -> str:
+        return 'Observation'
+
 
 class ObservationTypeConcept(IntEnum):
     LAB = 32856
 
+    @classmethod
+    def get_domain_id(cls,) -> str:
+        return 'Type Concept'
+
 
 class UnitConcept(IntEnum):
     SECOND = 8555
+
+    @classmethod
+    def get_domain_id(cls,) -> str:
+        return 'Unit'
 
 
 class OuraKeywords(str, Enum):
