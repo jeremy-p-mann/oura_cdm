@@ -20,11 +20,6 @@ def unit_concept(request):
     return request.param
 
 
-@pytest.fixture(params=[c for c in ObservationConcept])
-def observation_concept(request):
-    return request.param
-
-
 @pytest.fixture(params=[c for c in ObservationTypeConcept])
 def observation_type_concept(request):
     return request.param

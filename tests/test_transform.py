@@ -2,19 +2,7 @@ import pytest
 
 from oura_cdm.concepts import (ObservationTypeConcept, OuraKeywords,
                                ObservationConcept)
-from oura_cdm.observation import get_observation_table
 from oura_cdm.schemas import SleepObservationSchema
-
-
-@pytest.fixture
-def observation_df(oura_data):
-    observation_df = get_observation_table(oura_data)
-    return observation_df
-
-
-@pytest.fixture
-def raw_observation(oura_data):
-    return oura_data[0]
 
 
 @pytest.fixture
