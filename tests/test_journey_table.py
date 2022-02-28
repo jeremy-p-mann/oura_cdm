@@ -3,11 +3,17 @@ import pytest
 
 from oura_cdm.concepts import ObservationConcept, OuraKeywords
 from oura_cdm.journey import make_observation_journey_df
+from oura_cdm.schemas import make_journey_schema
 
 
 @pytest.fixture(scope='session')
 def journey_df(observation_df):
     return make_observation_journey_df(observation_df)
+
+
+@pytest.fixture(scope='session')
+def journey_schema(observation_df):
+    return make_journey_schema(observation_df)
 
 
 def test_observations_columns_in_observation_journey(journey_df):
@@ -32,3 +38,6 @@ def test_observation_value_at_date(
 def test_journey_index_datetime(journey_df):
     assert isinstance(journey_df.index, pd.DatetimeIndex)
 
+
+def test_journey_fits_schema(journey_df, journey_schema):
+    journey_schema.validate(journey_df)

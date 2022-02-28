@@ -1,18 +1,12 @@
 import pytest
 
-from oura_cdm.concepts import (ObservationConcept, ObservationTypeConcept,
-                               UnitConcept, Concept)
-from oura_cdm.ontology import Ontology
+from oura_cdm.concepts import (Concept, ObservationConcept,
+                               ObservationTypeConcept, UnitConcept)
 
-
-@pytest.fixture(scope='session')
-def ontology():
-    return Ontology()
 
 @pytest.fixture(params=Concept.get_all_concepts())
 def concept(request):
     return request.param
-
 
 
 @pytest.fixture(params=[c for c in UnitConcept])
