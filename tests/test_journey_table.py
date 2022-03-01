@@ -1,4 +1,3 @@
-import pandas as pd
 import pytest
 
 from oura_cdm.concepts import ObservationConcept, OuraKeywords
@@ -35,10 +34,6 @@ def test_observation_value_at_date(
         * ObservationConcept.get_reference_value(observation_concept)
     actual = journey_df.loc[date, observation_concept.value]
     assert expected == actual
-
-
-def test_journey_index_datetime(journey_df):
-    assert isinstance(journey_df.index, pd.DatetimeIndex)
 
 
 def test_journey_fits_schema(journey_df, journey_schema):

@@ -1,8 +1,9 @@
 from enum import Enum
 
+import pandas as pd
 import pandera as pa
 from pandera.typing import DateTime, Series
-from pandera import Column
+from pandera import Column, Index
 
 from oura_cdm.concepts import ObservationConcept
 
@@ -38,6 +39,7 @@ def make_journey_schema(observation_df):
         for observation in observations
     }
     schema = pa.DataFrameSchema(
-        columns
+        columns,
+        index=Index(pd.Timestamp)
     )
     return schema
