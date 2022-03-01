@@ -1,6 +1,9 @@
 from __future__ import annotations
+
 from enum import Enum, IntEnum
-from typing import List
+from typing import List, Type
+
+import pandas as pd
 
 
 class Concept(IntEnum):
@@ -25,13 +28,19 @@ class ObservationConcept(Concept, IntEnum):
 
     @classmethod
     def get_observation_type_concept_id(
-            cls, sleep_concept: ObservationConcept) -> int:
+            cls, concept: ObservationConcept) -> int:
         return ObservationTypeConcept.LAB
 
     @classmethod
     def get_unit_source_id(
             cls, concept: ObservationConcept) -> UnitConcept:
+        # RENAME this as it returns a concept
         return UnitConcept.SECOND
+
+    @classmethod
+    def get_reference_value(
+            cls, concept: ObservationConcept) -> Type:
+        return UnitConcept.get_reference_value(cls.get_unit_source_id(concept))
 
     @classmethod
     def get_domain_id(cls,) -> str:
@@ -52,6 +61,10 @@ class UnitConcept(Concept, IntEnum):
     @classmethod
     def get_domain_id(cls,) -> str:
         return 'Unit'
+
+    @classmethod
+    def get_reference_value(cls, concept: UnitConcept):
+        return pd.Timedelta(1, 's')
 
 
 class OuraKeywords(str, Enum):

@@ -1,7 +1,9 @@
-from enum import Enum
-
+import pandas as pd
 import pandera as pa
 from pandera.typing import DateTime, Series
+from pandera import Column, Index
+
+from oura_cdm.concepts import ObservationConcept
 
 
 class SleepObservationSchema(pa.SchemaModel):
@@ -26,3 +28,16 @@ class SleepObservationSchema(pa.SchemaModel):
     value_source_value: Series[str] = pa.Field(nullable=True)
     observation_event_id: Series[int] = pa.Field(nullable=True)
     obs_event_field_concept_id: Series[int] = pa.Field(nullable=True)
+
+
+def make_journey_schema(observation_df):
+    observations = observation_df['observation_concept_id'].unique()
+    columns = {
+        observation: Column(type(ObservationConcept.get_reference_value(observation)))
+        for observation in observations
+    }
+    schema = pa.DataFrameSchema(
+        columns,
+        index=Index(pd.Timestamp)
+    )
+    return schema
