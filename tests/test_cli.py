@@ -24,3 +24,6 @@ def test_cli_exit_status(etl_process):
 
 def test_observation_table_exists(etl_process, target_folder_name):
     assert "observation.csv" in os.listdir(target_folder_name)
+
+def test_raw_data_exists(etl_process, target_folder_name):
+    assert "source_data.json" in os.listdir(target_folder_name)

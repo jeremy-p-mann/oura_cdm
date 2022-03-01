@@ -1,6 +1,7 @@
 import os
 from functools import partial
 from typing import Any, Dict
+import json
 
 from oura_cdm.extract_oura import get_oura_data
 from oura_cdm.logs import log_info
@@ -35,12 +36,17 @@ def write_artifacts(artifacts: Dict[str, Any], target_folder_name: str):
     log_info_p('Writing artifacts')
     os.makedirs(target_folder_name, mode=0o777,)
     observation_table_filepath = f'{target_folder_name}/observation.csv'
+    source_data_filepath = f'{target_folder_name}/source_data.json'
     log_info_p('Writing observation table')
     artifacts['observation_df'].to_csv(
         observation_table_filepath,
         sep='\t'
     )
     log_info_p(f'Observation table written to {observation_table_filepath}')
+    log_info_p('Writing Source Data')
+    with open(source_data_filepath, 'w') as f:
+        json.dump(artifacts['source_data'], f)
+    log_info_p(f'Source data written to {source_data_filepath}')
     log_info_p(
         f'Artifacts Successfully written to folder {target_folder_name}')
 
