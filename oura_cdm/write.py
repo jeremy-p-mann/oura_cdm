@@ -24,17 +24,16 @@ def write_artifacts(artifacts: Dict[str, Any], target_folder_name: str):
     journey_filename = Artifact.get_filename(Artifact.JOURNEY)
     journey_filepath = \
         f'{target_folder_name}/{journey_filename}'
-    # journey_data_filepath = f'{target_folder_name}/{Artifact.JOURNEY.value}'
     log_info_p('Writing observation table')
-    artifacts[Artifact.OBSERVATION.value].to_csv(
+    artifacts[Artifact.OBSERVATION].to_csv(
         observation_table_filepath,
         sep=CSV_SEP
     )
     log_info_p(f'Observation table written to {observation_table_filepath}')
     log_info_p('Writing Source Data')
     with open(source_data_filepath, 'w') as f:
-        json.dump(artifacts[Artifact.SOURCE_DATA.value], f)
-    artifacts[Artifact.OBSERVATION.value].to_csv(
+        json.dump(artifacts[Artifact.SOURCE_DATA], f)
+    artifacts[Artifact.OBSERVATION].to_csv(
         journey_filepath,
         sep=CSV_SEP
     )

@@ -14,11 +14,11 @@ log_info_p = partial(log_info, **{'name': __name__})
 def validate_run(artifacts: Dict[str, Any]):
     log_info_p('Validating Observation Data')
     for artifact in Artifact:
-        assert artifact.value in artifacts.keys()
-    observation_df = artifacts[Artifact.OBSERVATION.value]
+        assert artifact in artifacts.keys()
+    observation_df = artifacts[Artifact.OBSERVATION]
     ObservationSchema.validate(observation_df)
 
-    journey_df = artifacts[Artifact.JOURNEY.value]
+    journey_df = artifacts[Artifact.JOURNEY]
     journey_schema = make_journey_schema(observation_df)
     journey_schema.validate(journey_df)
 
@@ -32,9 +32,9 @@ def run(target_folder_name: str):
     observation_df = get_observation_table(raw_oura_data)
     journey_df = make_observation_journey_df(observation_df)
     artifacts: Dict[str, Any] = {
-        Artifact.OBSERVATION.value: observation_df,
-        Artifact.SOURCE_DATA.value: raw_oura_data,
-        Artifact.JOURNEY.value: journey_df,
+        Artifact.OBSERVATION: observation_df,
+        Artifact.SOURCE_DATA: raw_oura_data,
+        Artifact.JOURNEY: journey_df,
     }
     log_info_p('Run Successful')
     return artifacts

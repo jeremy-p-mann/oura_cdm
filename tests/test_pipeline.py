@@ -6,7 +6,7 @@ from oura_cdm.artifacts import Artifact
 
 @pytest.fixture(scope='session')
 def observation_df(pipeline_artifacts):
-    return pipeline_artifacts[Artifact.OBSERVATION.value]
+    return pipeline_artifacts[Artifact.OBSERVATION]
 
 
 def test_run_valid(pipeline_artifacts):
