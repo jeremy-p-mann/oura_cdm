@@ -5,14 +5,16 @@ from typing import Any, Dict
 from oura_cdm.extract_oura import get_oura_data
 from oura_cdm.logs import log_info
 from oura_cdm.observation import get_observation_table
-from oura_cdm.schemas import ObservationSchema
+from oura_cdm.schemas import ObservationSchema, make_journey_schema
 
 log_info_p = partial(log_info, **{'name': __name__})
 
 
 def validate_run(artifacts: Dict[str, Any]):
     log_info_p('Validating Observation Data')
-    ObservationSchema.validate(artifacts['observation_df'])
+    observation_df = artifacts['observation_df']
+    ObservationSchema.validate(observation_df)
+    assert 'source_data' in artifacts.keys()
     log_info_p('Observation data valid')
 
 
@@ -22,7 +24,8 @@ def run(target_folder_name: str):
     raw_oura_data = get_oura_data()
     observation_df = get_observation_table(raw_oura_data)
     artifacts: Dict[str, Any] = {
-        "observation_df": observation_df
+        "observation_df": observation_df,
+        "source_data": raw_oura_data,
     }
     log_info_p('Run Successful')
     return artifacts
