@@ -18,9 +18,9 @@ def validate_run(artifacts: Dict[str, Any]):
     observation_df = artifacts[Artifact.OBSERVATION.value]
     ObservationSchema.validate(observation_df)
 
-    # journey_df = artifacts['journey_df']
-    # journey_schema = make_journey_schema(observation_df)
-    # journey_schema.validate(journey_df)
+    journey_df = artifacts[Artifact.JOURNEY.value]
+    journey_schema = make_journey_schema(observation_df)
+    journey_schema.validate(journey_df)
 
     log_info_p('Observation data valid')
 

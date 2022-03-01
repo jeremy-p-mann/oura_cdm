@@ -24,4 +24,5 @@ def test_cli_exit_status(etl_process):
 
 
 def test_artifacts_written(etl_process, target_folder_name):
-    assert [Artifact.get_filename(a) for a in Artifact] == os.listdir(target_folder_name)
+    assert {Artifact.get_filename(a) for a in Artifact} == \
+        set(os.listdir(target_folder_name))
