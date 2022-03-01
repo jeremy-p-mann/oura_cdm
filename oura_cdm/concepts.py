@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from enum import Enum, IntEnum
 from typing import List, Type
-from datetime import timedelta
 
 import pandas as pd
 
@@ -29,7 +28,7 @@ class ObservationConcept(Concept, IntEnum):
 
     @classmethod
     def get_observation_type_concept_id(
-            cls, sleep_concept: ObservationConcept) -> int:
+            cls, concept: ObservationConcept) -> int:
         return ObservationTypeConcept.LAB
 
     @classmethod

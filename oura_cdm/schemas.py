@@ -1,5 +1,3 @@
-from enum import Enum
-
 import pandas as pd
 import pandera as pa
 from pandera.typing import DateTime, Series
