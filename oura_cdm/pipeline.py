@@ -5,14 +5,14 @@ from typing import Any, Dict
 from oura_cdm.extract_oura import get_oura_data
 from oura_cdm.logs import log_info
 from oura_cdm.observation import get_observation_table
-from oura_cdm.schemas import SleepObservationSchema
+from oura_cdm.schemas import ObservationSchema
 
 log_info_p = partial(log_info, **{'name': __name__})
 
 
 def validate_run(artifacts: Dict[str, Any]):
     log_info_p('Validating Observation Data')
-    SleepObservationSchema.validate(artifacts['observation_df'])
+    ObservationSchema.validate(artifacts['observation_df'])
     log_info_p('Observation data valid')
 
 
