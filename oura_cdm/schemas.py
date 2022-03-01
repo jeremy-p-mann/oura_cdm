@@ -6,7 +6,7 @@ from pandera import Column, Index
 from oura_cdm.concepts import ObservationConcept
 
 
-class SleepObservationSchema(pa.SchemaModel):
+class ObservationSchema(pa.SchemaModel):
     observation_id: Series[int] = pa.Field(unique=True)
     person_id: Series[int]
     observation_concept_id: Series[int]

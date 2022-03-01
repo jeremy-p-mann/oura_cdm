@@ -1,13 +1,12 @@
-import os
-
 import pytest
 
-from oura_cdm.pipeline import clean_up_run, validate_run
+from oura_cdm.pipeline import validate_run
+from oura_cdm.artifacts import Artifact
 
 
 @pytest.fixture(scope='session')
 def observation_df(pipeline_artifacts):
-    return pipeline_artifacts['observation_df']
+    return pipeline_artifacts[Artifact.OBSERVATION]
 
 
 def test_run_valid(pipeline_artifacts):

@@ -2,7 +2,7 @@ import pytest
 
 from oura_cdm.concepts import (ObservationTypeConcept, OuraKeywords,
                                ObservationConcept)
-from oura_cdm.schemas import SleepObservationSchema
+from oura_cdm.schemas import ObservationSchema
 
 
 @pytest.fixture
@@ -31,7 +31,7 @@ def observation_dict(concept, observation_df, raw_observation_date):
 
 
 def test_observation_table_schema(observation_df):
-    SleepObservationSchema.validate(observation_df)
+    ObservationSchema.validate(observation_df)
 
 
 def test_n_observations(oura_data, observation_df):
