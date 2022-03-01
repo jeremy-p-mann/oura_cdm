@@ -14,7 +14,6 @@ def make_observation_journey_df(observation_df: pd.DataFrame) -> pd.DataFrame:
         values='value_as_number'
     )
     ans.index = pd.DatetimeIndex(ans.index)
-    concept_ids = ans.columns
     for c in ans.columns:
         ans[c] = ans[c] * ObservationConcept.get_reference_value(c)
     return ans
