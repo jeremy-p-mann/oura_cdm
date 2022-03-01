@@ -34,7 +34,7 @@ class SleepObservationSchema(pa.SchemaModel):
 def make_journey_schema(observation_df):
     observations = observation_df['observation_concept_id'].unique()
     columns = {
-        observation: Column(ObservationConcept.get_dtype(observation))
+        observation: Column(type(ObservationConcept.get_reference_value(observation)))
         for observation in observations
     }
     schema = pa.DataFrameSchema(

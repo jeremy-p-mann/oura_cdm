@@ -31,8 +31,10 @@ def test_observation_value_at_date(
     expected_value = raw_observation[
         OuraKeywords.get_keyword_from_concept(observation_concept)
     ]
-    actual_value = journey_df.loc[date, observation_concept.value]
-    assert expected_value == actual_value
+    expected = expected_value \
+        * ObservationConcept.get_reference_value(observation_concept)
+    actual = journey_df.loc[date, observation_concept.value]
+    assert expected == actual
 
 
 def test_journey_index_datetime(journey_df):

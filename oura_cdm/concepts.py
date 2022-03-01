@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from enum import Enum, IntEnum
 from typing import List, Type
+from datetime import timedelta
 
 import pandas as pd
 
@@ -38,9 +39,9 @@ class ObservationConcept(Concept, IntEnum):
         return UnitConcept.SECOND
 
     @classmethod
-    def get_dtype(
+    def get_reference_value(
             cls, concept: ObservationConcept) -> Type:
-        return UnitConcept.get_dtype(cls.get_unit_source_id(concept))
+        return UnitConcept.get_reference_value(cls.get_unit_source_id(concept))
 
     @classmethod
     def get_domain_id(cls,) -> str:
@@ -63,8 +64,8 @@ class UnitConcept(Concept, IntEnum):
         return 'Unit'
 
     @classmethod
-    def get_dtype(cls, concept: UnitConcept) -> Type:
-        return pd.Timedelta
+    def get_reference_value(cls, concept: UnitConcept):
+        return pd.Timedelta(1, 's')
 
 
 class OuraKeywords(str, Enum):
