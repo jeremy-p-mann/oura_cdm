@@ -2,7 +2,8 @@ import os
 
 import pytest
 
-from oura_cdm.pipeline import clean_up_run
+from oura_cdm.write import clean_up_run
+from oura_cdm.artifacts import Artifact
 
 
 @pytest.fixture(scope='session')
@@ -22,8 +23,5 @@ def test_cli_exit_status(etl_process):
     assert etl_process == 0
 
 
-def test_observation_table_exists(etl_process, target_folder_name):
-    assert "observation.csv" in os.listdir(target_folder_name)
-
-def test_raw_data_exists(etl_process, target_folder_name):
-    assert "source_data.json" in os.listdir(target_folder_name)
+def test_artifacts_written(etl_process, target_folder_name):
+    assert [Artifact.get_filename(a) for a in Artifact] == os.listdir(target_folder_name)

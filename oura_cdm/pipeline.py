@@ -1,21 +1,27 @@
-import os
 from functools import partial
 from typing import Any, Dict
-import json
 
 from oura_cdm.extract_oura import get_oura_data
 from oura_cdm.logs import log_info
 from oura_cdm.observation import get_observation_table
 from oura_cdm.schemas import ObservationSchema, make_journey_schema
+from oura_cdm.journey import make_observation_journey_df
+from oura_cdm.artifacts import Artifact
 
 log_info_p = partial(log_info, **{'name': __name__})
 
 
 def validate_run(artifacts: Dict[str, Any]):
     log_info_p('Validating Observation Data')
-    observation_df = artifacts['observation_df']
+    for artifact in Artifact:
+        assert artifact.value in artifacts.keys()
+    observation_df = artifacts[Artifact.OBSERVATION.value]
     ObservationSchema.validate(observation_df)
-    assert 'source_data' in artifacts.keys()
+
+    # journey_df = artifacts['journey_df']
+    # journey_schema = make_journey_schema(observation_df)
+    # journey_schema.validate(journey_df)
+
     log_info_p('Observation data valid')
 
 
@@ -24,38 +30,11 @@ def run(target_folder_name: str):
     log_info_p('Beginning Run')
     raw_oura_data = get_oura_data()
     observation_df = get_observation_table(raw_oura_data)
+    journey_df = make_observation_journey_df(observation_df)
     artifacts: Dict[str, Any] = {
-        "observation_df": observation_df,
-        "source_data": raw_oura_data,
+        Artifact.OBSERVATION.value: observation_df,
+        Artifact.SOURCE_DATA.value: raw_oura_data,
+        Artifact.JOURNEY.value: journey_df,
     }
     log_info_p('Run Successful')
     return artifacts
-
-
-def write_artifacts(artifacts: Dict[str, Any], target_folder_name: str):
-    log_info_p('Writing artifacts')
-    os.makedirs(target_folder_name, mode=0o777,)
-    observation_table_filepath = f'{target_folder_name}/observation.csv'
-    source_data_filepath = f'{target_folder_name}/source_data.json'
-    log_info_p('Writing observation table')
-    artifacts['observation_df'].to_csv(
-        observation_table_filepath,
-        sep='\t'
-    )
-    log_info_p(f'Observation table written to {observation_table_filepath}')
-    log_info_p('Writing Source Data')
-    with open(source_data_filepath, 'w') as f:
-        json.dump(artifacts['source_data'], f)
-    log_info_p(f'Source data written to {source_data_filepath}')
-    log_info_p(
-        f'Artifacts Successfully written to folder {target_folder_name}')
-
-
-def clean_up_run(
-    target_folder_name: str
-):
-    log_info_p('Cleaning Run')
-    for file in os.listdir(target_folder_name):
-        os.remove(f'{target_folder_name}/{file}')
-    os.rmdir(target_folder_name)
-    log_info_p(f'Run cleaned, {target_folder_name} removed')
