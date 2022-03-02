@@ -17,5 +17,6 @@ jobs:
         run: |
           pip install -e .
           pip install pytest
+          pip install streamlit
 
       - run: pytest -m "not requires_access"
