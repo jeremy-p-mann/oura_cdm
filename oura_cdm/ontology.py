@@ -25,3 +25,14 @@ class Ontology():
 
     def is_valid(self, concept: Concept) -> bool:
         return concept.value in self._concept_df.index
+
+    def get_concept_from_id(self, concept_id: int) -> Concept:
+        all_concepts = Concept.get_all_concepts()
+        concept = [c for c in all_concepts if c.value == concept_id]
+        return concept[0]
+
+    def get_concept_name_from_id(self, concept_id) -> str:
+        concept = self.get_concept_from_id(concept_id)
+        return self.get_concept_name(concept)
+
+

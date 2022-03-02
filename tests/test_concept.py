@@ -42,3 +42,13 @@ def test_observation_type_domain(ontology, observation_type_concept):
 
 def test_concepts_in_concept_df(ontology, concept):
     assert ontology.is_valid(concept)
+
+
+def test_get_concept_from_id(ontology, concept):
+    assert concept == ontology.get_concept_from_id(concept.value)
+
+
+def test_get_concept_id_from_name(ontology, concept):
+    concept = ontology.get_concept_from_id(concept.value)
+    expected = ontology.get_concept_name(concept)
+    assert expected == ontology.get_concept_name_from_id(concept.value)
