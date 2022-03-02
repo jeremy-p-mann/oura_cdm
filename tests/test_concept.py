@@ -52,3 +52,10 @@ def test_get_concept_id_from_name(ontology, concept):
     concept = ontology.get_concept_from_id(concept.value)
     expected = ontology.get_concept_name(concept)
     assert expected == ontology.get_concept_name_from_id(concept.value)
+
+
+def test_concept_name_matches_enum_name(concept, ontology):
+    actual_terms = {term.lower() for term in concept.concept_name.split(' ')}
+    expected_terms = {term.lower() for term in concept.name.split('_')}
+    assert actual_terms.issubset(expected_terms)
+

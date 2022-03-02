@@ -4,7 +4,7 @@ from oura_cdm.concepts import ObservationConcept
 from oura_cdm.extract_oura import get_oura_data
 from oura_cdm.observation import get_observation_table
 from oura_cdm.pipeline import run
-from oura_cdm.ontology import Ontology
+from oura_cdm.concepts import Ontology
 
 
 @pytest.fixture(scope='session')
