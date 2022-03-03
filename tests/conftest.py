@@ -23,20 +23,20 @@ def oura_data(start_date, end_date):
 
 
 @pytest.fixture(scope='session')
-def pipeline_inputs():
+def target_folder_name():
+    return 'sleep_data_test'
+
+
+@pytest.fixture(scope='session')
+def pipeline_inputs(target_folder_name):
     return {
-        "target_folder_name": "sleep_data_test"
+        "target_folder_name": target_folder_name
     }
 
 
 @pytest.fixture(scope='session')
 def pipeline_artifacts(pipeline_inputs):
     return run(**pipeline_inputs)
-
-
-@pytest.fixture(scope='session')
-def target_folder_name():
-    return 'sleep_data_test'
 
 
 @pytest.fixture(scope='session')

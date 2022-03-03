@@ -86,6 +86,8 @@ class ObservationTransformer():
                 new_row.loc[:, 'unit_concept_id'] = self.get_unit_concept_id(
                     i, concept)
                 rows.append(new_row)
+        if len(rows) == 0:
+            return mock_row.iloc[:0, :]
         ans = pd.concat(rows)
         return ans
 
