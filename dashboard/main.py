@@ -1,7 +1,7 @@
 import altair as alt
+import numpy as np
 import pandas as pd
 import streamlit as st
-import numpy as np
 
 from oura_cdm.artifacts import Artifact
 from oura_cdm.concepts import Ontology
@@ -24,6 +24,17 @@ def make_dashboard():
     melted_journey_df = pd.melt(
         journey_df, value_vars=list(journey_df.columns), ignore_index=False)
     duration_column = 'Duration (hours)'
+
+    melted_journey_df['minutes'] = (
+        (melted_journey_df['value']
+         / pd.Timedelta('1 minute')).astype(int)
+        % 60
+    ).astype(str)
+    melted_journey_df['hours'] = (
+        (melted_journey_df['value']
+         / pd.Timedelta('1 hour')).astype(int)
+    ).astype(str)
+
     melted_journey_df[duration_column] = melted_journey_df.value \
         / pd.Timedelta('1 hour')
     melted_journey_df['Duration (hours)'] = np.round(
@@ -31,25 +42,28 @@ def make_dashboard():
     melted_journey_df = melted_journey_df.drop(columns=['value', ])
     melted_journey_df = melted_journey_df.reset_index()
     melted_journey_df['description'] = (
-        melted_journey_df['Duration (hours)'].astype(str)
-        + 'hours on date '
+        + melted_journey_df['hours'] + ':'
+        + melted_journey_df['minutes']
+        + ' '
         + melted_journey_df['observation_date'].astype(str)
-        + ' of type '
+        + ' '
         + melted_journey_df['observation_concept_id'].astype(str)
     )
 
+    st.title("Observation Table")
     st.write(observation_df)
+    st.title("Observation Graph")
 
+    width = min(len(melted_journey_df) * 10, 500)
     single_nearest = alt.selection_single(on='mouseover', nearest=True)
     chart = alt.Chart(melted_journey_df).mark_point().encode(
         x='observation_date',
         y=duration_column,
         color='observation_concept_id',
         tooltip='description'
-    ).add_selection(single_nearest).properties(
-        width=len(melted_journey_df),
-        height=500
-    ).interactive()
+    ).add_selection(single_nearest).interactive().properties(
+        width=width,
+    )
 
     st.altair_chart(chart)
 
