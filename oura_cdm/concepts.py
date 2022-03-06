@@ -138,8 +138,8 @@ class OuraConcept(Concept, IntEnum):
     @classmethod
     def get_keyword_from_concept(cls, concept: ObservationConcept):
         return {
-            # ObservationConcept.REM_SLEEP_DURATION: OuraConcept.REM,
-            # ObservationConcept.DEEP_SLEEP_DURATION: OuraConcept.DEEP,
-            # ObservationConcept.LIGHT_SLEEP_DURATION: OuraConcept.LIGHT,
-            # ObservationConcept.TOTAL_SLEEP_DURATION: OuraConcept.TOTAL,
-        }[concept]
+            ObservationConcept.REM_SLEEP_DURATION: OuraConcept.REM,
+            ObservationConcept.DEEP_SLEEP_DURATION: OuraConcept.DEEP,
+            ObservationConcept.LIGHT_SLEEP_DURATION: OuraConcept.LIGHT,
+            ObservationConcept.TOTAL_SLEEP_DURATION: OuraConcept.TOTAL,
+        }[concept].concept_name

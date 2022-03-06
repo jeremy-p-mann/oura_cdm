@@ -104,7 +104,7 @@ class ObservationTransformer():
 
     def get_value_source_value(self, index: int, concept: ObservationConcept) -> str:
         return str(self.raw_oura_data[index][
-            OuraKeywords.get_keyword_from_concept(concept)
+            OuraConcept.get_keyword_from_concept(concept)
         ])
 
     def get_observation_type_id(self, index: int, concept: ObservationConcept) -> int:
