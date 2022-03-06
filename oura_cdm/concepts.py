@@ -16,6 +16,7 @@ class Concept(IntEnum):
         concepts += ObservationTypeConcept.get_concepts()
         concepts += UnitConcept.get_concepts()
         concepts += ObservationConcept.get_concepts()
+        concepts += OuraConcept.get_concepts()
         return concepts
 
     @classmethod
@@ -121,4 +122,24 @@ class OuraKeywords(str, Enum):
             ObservationConcept.DEEP_SLEEP_DURATION: OuraKeywords.DEEP,
             ObservationConcept.LIGHT_SLEEP_DURATION: OuraKeywords.LIGHT,
             ObservationConcept.TOTAL_SLEEP_DURATION: OuraKeywords.TOTAL,
+        }[concept]
+
+
+class OuraConcept(Concept, IntEnum):
+    """
+    Strings referenced in Oura's API
+    """
+    SUMMARY_DATE = 8197349813
+    REM = 8197349814
+    DEEP = 8197349815
+    LIGHT = 8197349816
+    TOTAL = 8197349817
+
+    @classmethod
+    def get_keyword_from_concept(cls, concept: ObservationConcept):
+        return {
+            # ObservationConcept.REM_SLEEP_DURATION: OuraConcept.REM,
+            # ObservationConcept.DEEP_SLEEP_DURATION: OuraConcept.DEEP,
+            # ObservationConcept.LIGHT_SLEEP_DURATION: OuraConcept.LIGHT,
+            # ObservationConcept.TOTAL_SLEEP_DURATION: OuraConcept.TOTAL,
         }[concept]

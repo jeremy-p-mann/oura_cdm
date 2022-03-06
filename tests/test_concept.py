@@ -1,6 +1,6 @@
 import pytest
 
-from oura_cdm.concepts import (Concept, ObservationConcept,
+from oura_cdm.concepts import (Concept, ObservationConcept, OuraKeywords,
                                ObservationTypeConcept, UnitConcept)
 
 
@@ -55,7 +55,13 @@ def test_get_concept_id_from_name(ontology, concept):
 
 
 def test_concept_name_matches_enum_name(concept, ontology):
-    actual_terms = {term.lower() for term in concept.concept_name.split(' ')}
-    expected_terms = {term.lower() for term in concept.name.split('_')}
-    assert actual_terms.issubset(expected_terms)
+    concept_name = concept.concept_name
+    if ' ' in concept_name:
+        actual_terms = {
+            term.lower() for term in concept.concept_name.split(' ')
+        }
+        expected_terms = {term.lower() for term in concept.name.split('_')}
+        assert actual_terms.issubset(expected_terms)
+    else:
+        assert concept_name.lower() == concept.name.lower()
 
