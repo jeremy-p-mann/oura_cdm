@@ -92,6 +92,7 @@ class ObservationTransformer():
         return ans
 
     def get_observation_date(self, index: int) -> str:
+        # TODO: do this with the ontology
         return self.raw_oura_data[index][OuraConcept.SUMMARY_DATE.concept_name]
 
     def get_observation_id(

@@ -10,6 +10,7 @@ import pandas as pd
 
 
 class Concept(IntEnum):
+
     @classmethod
     def get_all_concepts(cls) -> List[Concept]:
         concepts = []
@@ -17,6 +18,7 @@ class Concept(IntEnum):
         concepts += UnitConcept.get_concepts()
         concepts += ObservationConcept.get_concepts()
         concepts += OuraConcept.get_concepts()
+        concepts += PhysicalConcept.get_concepts()
         return concepts
 
     @classmethod
@@ -28,6 +30,11 @@ class Concept(IntEnum):
     def concept_name(self) -> str:
         return Ontology().get_concept_name(self)
 
+    @property
+    def is_standard(self) -> bool:
+        return Ontology().get_standard_concept(self) == 'S'
+
+
 
 @dataclass
 class Ontology():
@@ -37,9 +44,19 @@ class Ontology():
         df = pd.read_csv(stream, sep='\t', index_col='concept_id')
         return df
 
+    @cached_property
+    def _concept_relationship_df(self,) -> pd.DataFrame:
+        stream = pkg_resources.resource_stream(__name__, 'data/concept_relationship.csv')
+        df = pd.read_csv(stream, sep='\t', index_col='concept_id_1')
+        return df
+
     def get_concept_name(self, concept: Concept) -> str:
         assert self.is_valid(concept), 'concept not supported'
         return self._concept_df.loc[concept.value, 'concept_name']
+
+    def get_standard_concept(self, concept: Concept) -> str:
+        assert self.is_valid(concept), 'concept not supported'
+        return self._concept_df.loc[concept.value, 'standard_concept']
 
     def get_domain_id(self, concept: Concept) -> str:
         assert self.is_valid(concept), 'concept not supported'
@@ -50,12 +67,20 @@ class Ontology():
 
     def get_concept_from_id(self, concept_id: int) -> Concept:
         all_concepts = Concept.get_all_concepts()
-        concept = [c for c in all_concepts if c.value == concept_id]
-        return concept[0]
+        concepts = [c for c in all_concepts if c.value == concept_id]
+        assert len(concepts) == 1, f'no concept for id: {concept_id}'
+        return concepts[0]
 
     def get_concept_name_from_id(self, concept_id) -> str:
         concept = self.get_concept_from_id(concept_id)
         return self.get_concept_name(concept)
+
+    def maps_to(self, concept: Concept) -> Concept:
+        maps_to_df = self._concept_relationship_df.loc[[concept.value], :]
+        ans_ids = maps_to_df[maps_to_df.relationship_id == 'Maps to'].concept_id_2
+        assert len(ans_ids) == 1
+        ans_id = ans_ids.iloc[0]
+        return self.get_concept_from_id(ans_id)
 
 
 class ObservationConcept(Concept, IntEnum):
@@ -104,6 +129,9 @@ class UnitConcept(Concept, IntEnum):
     def get_reference_value(cls, concept: UnitConcept):
         return pd.Timedelta(1, 's')
 
+
+class PhysicalConcept(Concept, IntEnum):
+    DATE = 4260905
 
 class OuraConcept(Concept, IntEnum):
     """

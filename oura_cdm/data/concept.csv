@@ -10,3 +10,4 @@ concept_id	concept_name	domain_id	vocabulary_id	concept_class_id	standard_concep
 8197349815	deep	API key	Oura v1				20220306	20991231	
 8197349816	light	API key	Oura v1				20220306	20991231	
 8197349817	total	API key	Oura v1				20220306	20991231	
+4260905	Date	Observation	SNOMED	Qualifier Value	S	410672004	20040731	20991231	

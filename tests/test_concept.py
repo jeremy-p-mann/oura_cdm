@@ -1,6 +1,6 @@
 import pytest
 
-from oura_cdm.concepts import (Concept, ObservationConcept,
+from oura_cdm.concepts import (Concept, ObservationConcept, OuraConcept,
                                ObservationTypeConcept, UnitConcept)
 
 
@@ -16,6 +16,11 @@ def unit_concept(request):
 
 @pytest.fixture(params=[c for c in ObservationTypeConcept])
 def observation_type_concept(request):
+    return request.param
+
+
+@pytest.fixture(params=[c for c in OuraConcept])
+def oura_concept(request):
     return request.param
 
 
@@ -65,3 +70,7 @@ def test_concept_name_matches_enum_name(concept, ontology):
     else:
         assert concept_name.lower() == concept.name.lower()
 
+
+def test_every_oura_concept_maps_to_standard_concept(oura_concept, ontology):
+    concept = ontology.maps_to(oura_concept)
+    assert concept.is_standard
