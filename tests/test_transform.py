@@ -1,19 +1,19 @@
 import pytest
 
 from oura_cdm.concepts import (ObservationConcept, ObservationTypeConcept,
-                               OuraKeywords)
+                               OuraKeywords, OuraConcept)
 from oura_cdm.observation import get_observation_table
 from oura_cdm.schemas import ObservationSchema
 
 
 @pytest.fixture
 def raw_observation_value(raw_observation, observation_concept):
-    return raw_observation[OuraKeywords.get_keyword_from_concept(observation_concept)]
+    return raw_observation[OuraConcept.get_keyword_from_concept(observation_concept)]
 
 
 @pytest.fixture
 def raw_observation_date(raw_observation):
-    return raw_observation[OuraKeywords.DATE]
+    return raw_observation[OuraConcept.SUMMARY_DATE.concept_name]
 
 
 @pytest.fixture(params=list(ObservationConcept))
