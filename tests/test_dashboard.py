@@ -1,5 +1,3 @@
-from subprocess import run
-
 from dashboard.main import make_dashboard
 
 
