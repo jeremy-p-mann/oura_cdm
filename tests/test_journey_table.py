@@ -1,6 +1,6 @@
 import pytest
 
-from oura_cdm.concepts import ObservationConcept, OuraKeywords
+from oura_cdm.concepts import ObservationConcept, OuraKeywords, OuraConcept
 from oura_cdm.journey import make_observation_journey_df
 from oura_cdm.schemas import make_journey_schema
 
@@ -28,7 +28,7 @@ def test_observation_value_at_date(
         observation_concept, journey_df, raw_observation):
     date = raw_observation['summary_date']
     expected_value = raw_observation[
-        OuraKeywords.get_keyword_from_concept(observation_concept)
+        OuraConcept.get_keyword_from_concept(observation_concept)
     ]
     expected = expected_value \
         * ObservationConcept.get_reference_value(observation_concept)
