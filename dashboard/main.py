@@ -50,8 +50,6 @@ def make_dashboard():
         + melted_journey_df['observation_concept_id'].astype(str)
     )
 
-    st.title("Sleep Data")
-
     st.title("Observation Table")
     st.write(observation_df)
     st.title("Observation Graph")
