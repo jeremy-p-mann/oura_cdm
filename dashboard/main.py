@@ -18,6 +18,8 @@ def make_dashboard():
     ontology = Ontology()
     observation_df = artifacts[Artifact.OBSERVATION]
     journey_df: pd.DataFrame = artifacts[Artifact.JOURNEY].copy()
+    source_data: pd.DataFrame = artifacts[Artifact.SOURCE_DATA]
+
     renaming = {c: ontology.get_concept_name_from_id(
         c) for c in journey_df.columns}
     journey_df = journey_df.rename(columns=renaming)
@@ -52,6 +54,8 @@ def make_dashboard():
 
     st.title("Observation Table")
     st.write(observation_df)
+    st.title("Source Data (Sample)")
+    st.write(source_data[0])
     st.title("Observation Graph")
 
     width = min(len(melted_journey_df) * 10, 500)
