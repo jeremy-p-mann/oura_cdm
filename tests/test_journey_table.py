@@ -1,6 +1,6 @@
 import pytest
 
-from oura_cdm.concepts import ObservationConcept, OuraKeywords, OuraConcept
+from oura_cdm.concepts import ObservationConcept, OuraConcept
 from oura_cdm.journey import make_observation_journey_df
 from oura_cdm.schemas import make_journey_schema
 

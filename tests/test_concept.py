@@ -1,6 +1,6 @@
 import pytest
 
-from oura_cdm.concepts import (Concept, ObservationConcept, OuraKeywords,
+from oura_cdm.concepts import (Concept, ObservationConcept,
                                ObservationTypeConcept, UnitConcept)
 
 

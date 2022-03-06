@@ -105,26 +105,6 @@ class UnitConcept(Concept, IntEnum):
         return pd.Timedelta(1, 's')
 
 
-class OuraKeywords(str, Enum):
-    """
-    Strings referenced in Oura's API
-    """
-    DATE = "summary_date"
-    REM = 'rem'
-    DEEP = 'deep'
-    LIGHT = 'light'
-    TOTAL = 'total'
-
-    @classmethod
-    def get_keyword_from_concept(cls, concept: ObservationConcept):
-        return {
-            ObservationConcept.REM_SLEEP_DURATION: OuraKeywords.REM,
-            ObservationConcept.DEEP_SLEEP_DURATION: OuraKeywords.DEEP,
-            ObservationConcept.LIGHT_SLEEP_DURATION: OuraKeywords.LIGHT,
-            ObservationConcept.TOTAL_SLEEP_DURATION: OuraKeywords.TOTAL,
-        }[concept]
-
-
 class OuraConcept(Concept, IntEnum):
     """
     Strings referenced in Oura's API

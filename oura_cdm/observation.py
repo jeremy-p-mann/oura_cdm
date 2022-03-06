@@ -5,7 +5,7 @@ from typing import Dict, List
 import pandas as pd
 
 from oura_cdm.concepts import (ObservationConcept, ObservationTypeConcept,
-                               OuraKeywords, OuraConcept)
+                               OuraConcept)
 from oura_cdm.logs import log_info, log_warning
 
 log_info_o = partial(log_info, **{'name': __name__})

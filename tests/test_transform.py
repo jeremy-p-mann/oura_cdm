@@ -1,7 +1,7 @@
 import pytest
 
 from oura_cdm.concepts import (ObservationConcept, ObservationTypeConcept,
-                               OuraKeywords, OuraConcept)
+                               OuraConcept)
 from oura_cdm.observation import get_observation_table
 from oura_cdm.schemas import ObservationSchema
 
