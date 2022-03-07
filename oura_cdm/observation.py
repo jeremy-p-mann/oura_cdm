@@ -111,9 +111,8 @@ class ObservationTransformer():
         ])
 
     def get_observation_type_id(self, index: int, concept: ObservationConcept) -> int:
+        # Use oura concept to get the observation type
         return ObservationTypeConcept.LAB.value
 
     def get_unit_concept_id(self, index: int, concept: ObservationConcept) -> int:
-        # TODO refactor so that this queries for the units of the source concept
-        # DOING
         return OuraConcept.get_unit(concept).value

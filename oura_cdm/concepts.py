@@ -179,8 +179,6 @@ class OuraConcept(Concept, IntEnum):
         }
         return translation
 
-    # TODO make sure all of these have units
-
     @classmethod
     def get_unit(cls, observation_concept: ObservationConcept) -> UnitConcept:
         oura_concept = cls.mapped_from(observation_concept)
