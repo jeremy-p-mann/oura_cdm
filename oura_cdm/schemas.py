@@ -1,7 +1,7 @@
 import pandas as pd
 import pandera as pa
-from pandera.typing import DateTime, Series
 from pandera import Column, Index
+from pandera.typing import DateTime, Series
 
 from oura_cdm.concepts import ObservationConcept
 
@@ -33,7 +33,8 @@ class ObservationSchema(pa.SchemaModel):
 def make_journey_schema(observation_df):
     observations = observation_df['observation_concept_id'].unique()
     columns = {
-        observation: Column(type(ObservationConcept.get_reference_value(observation)))
+        observation: Column(
+            type(ObservationConcept.get_reference_value(observation)))
         for observation in observations
     }
     schema = pa.DataFrameSchema(

@@ -5,3 +5,9 @@ concept_id	concept_name	domain_id	vocabulary_id	concept_class_id	standard_concep
 32856	Lab	Type Concept	Type Concept	Type Concept	S	OMOP4976929	20200820	20991231	
 8555	second	Unit	UCUM	Unit	S	s	19700101	20991231	
 1002368	Sleep duration	Observation	LOINC	Clinical Observation	S	93832-4	20191213	20991231	
+8197349813	summary_date	API key	Oura v1				20220306	20991231	
+8197349814	rem	API key	Oura v1				20220306	20991231	
+8197349815	deep	API key	Oura v1				20220306	20991231	
+8197349816	light	API key	Oura v1				20220306	20991231	
+8197349817	total	API key	Oura v1				20220306	20991231	
+4260905	Date	Observation	SNOMED	Qualifier Value	S	410672004	20040731	20991231	
