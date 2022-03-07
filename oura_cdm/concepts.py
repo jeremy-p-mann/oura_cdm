@@ -131,7 +131,10 @@ class UnitConcept(Concept, IntEnum):
 
 
 class PhysicalConcept(Concept, IntEnum):
+    # TODO rename to property concepts
     DATE = 4260905
+    # TIME = 4256606
+
 
 class OuraConcept(Concept, IntEnum):
     """
@@ -144,10 +147,11 @@ class OuraConcept(Concept, IntEnum):
     TOTAL = 8197349817
 
     @classmethod
-    def get_keyword_from_concept(cls, concept: ObservationConcept):
-        return {
-            ObservationConcept.REM_SLEEP_DURATION: OuraConcept.REM,
-            ObservationConcept.DEEP_SLEEP_DURATION: OuraConcept.DEEP,
-            ObservationConcept.LIGHT_SLEEP_DURATION: OuraConcept.LIGHT,
-            ObservationConcept.TOTAL_SLEEP_DURATION: OuraConcept.TOTAL,
-        }[concept].concept_name
+    def get_keyword_from_concept(cls, standard_concept: Concept):
+        assert standard_concept.is_standard
+        ontology = Ontology()
+        translation = {}
+        for concept in cls:
+            standard_concept = ontology.maps_to(concept)
+            translation[standard_concept] = concept
+        return translation[standard_concept].concept_name

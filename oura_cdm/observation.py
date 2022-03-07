@@ -64,6 +64,8 @@ def get_observation_table(raw_oura_data: List[Dict]) -> pd.DataFrame:
 
 @dataclass
 class ObservationTransformer():
+    # TODO: make the parameters the source data, ontology, and the vocabulary
+    # id of the source vocabulary.
     raw_oura_data: List[Dict]
 
     def get_transformed_data(self,) -> pd.DataFrame:
@@ -104,6 +106,7 @@ class ObservationTransformer():
         return float(self.get_value_source_value(index, concept))
 
     def get_value_source_value(self, index: int, concept: ObservationConcept) -> str:
+        # TODO: do this with the ontology
         return str(self.raw_oura_data[index][
             OuraConcept.get_keyword_from_concept(concept)
         ])
@@ -112,4 +115,5 @@ class ObservationTransformer():
         return ObservationTypeConcept.LAB.value
 
     def get_unit_concept_id(self, index: int, concept: ObservationConcept) -> int:
+        # TODO refactor so that this queries for the units of the source concept
         return ObservationConcept.get_unit_source_id(concept).value
