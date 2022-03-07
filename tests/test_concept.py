@@ -80,3 +80,7 @@ def test_oura_date_keyword(ontology):
     keyword = OuraConcept.get_keyword_from_concept(PhysicalConcept.DATE)
     assert 'date' in keyword.split('_')
 
+
+def test_all_oura_concepts_mapping_to_observation_concepts_have_units(
+        observation_concept):
+    assert isinstance(OuraConcept.get_unit(observation_concept), UnitConcept)

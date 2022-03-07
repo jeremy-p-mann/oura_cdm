@@ -59,8 +59,8 @@ def test_source_value(observation_dict, raw_observation_value):
 
 def test_units(observation_dict, observation_concept):
     unit_id = observation_dict['unit_concept_id']
-    assert unit_id == ObservationConcept.get_unit_source_id(
-        observation_concept)
+    assert unit_id == OuraConcept.get_unit(
+        observation_concept).value
 
 
 def test_observation_type_is_valid(observation_dict):

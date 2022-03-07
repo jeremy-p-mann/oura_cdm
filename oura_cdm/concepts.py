@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import pkg_resources
 from functools import cached_property
 from enum import Enum, IntEnum
-from typing import List, Type
+from typing import List, Type, Dict
 
 import pandas as pd
 
@@ -82,6 +82,13 @@ class Ontology():
         ans_id = ans_ids.iloc[0]
         return self.get_concept_from_id(ans_id)
 
+    def get_unit(self, concept: Concept) -> Concept:
+        maps_to_df = self._concept_relationship_df.loc[[concept.value], :]
+        ans_ids = maps_to_df[maps_to_df.relationship_id == 'Has unit'].concept_id_2
+        assert len(ans_ids) == 1
+        ans_id = ans_ids.iloc[0]
+        return self.get_concept_from_id(ans_id)
+
 
 class ObservationConcept(Concept, IntEnum):
     REM_SLEEP_DURATION = 1001480
@@ -103,6 +110,7 @@ class ObservationConcept(Concept, IntEnum):
     @classmethod
     def get_reference_value(
             cls, concept: ObservationConcept) -> Type:
+        # TODO Deprecate this to the unit concept
         return UnitConcept.get_reference_value(cls.get_unit_source_id(concept))
 
     @classmethod
@@ -149,12 +157,37 @@ class OuraConcept(Concept, IntEnum):
     @classmethod
     def get_keyword_from_concept(cls, standard_concept: Concept):
         assert standard_concept.is_standard
+        return cls.get_mapped_from()[standard_concept].concept_name
+
+    @classmethod
+    def get_mapped_from(cls,) -> Dict[Concept, OuraConcept]:
         ontology = Ontology()
-        translation = {}
+        translation: Dict[Concept, OuraConcept] = {}
         for concept in cls:
-            translated_concept = ontology.maps_to(concept)
-            translation[translated_concept] = concept
-        return translation[standard_concept].concept_name
+            standard_concept = ontology.maps_to(concept)
+            translation[standard_concept] = concept
+        return translation
+
+    @classmethod
+    def mapped_from(cls, concept: Concept) -> Concept:
+        return cls.get_mapped_from()[concept]
+
+    @classmethod
+    def get_maps_to(cls,) -> Dict[OuraConcept, Concept]:
+        translation: Dict[OuraConcept, Concept] = {
+            value: key for key, value in cls.get_mapped_from().items()
+        }
+        return translation
 
     # TODO make sure all of these have units
 
+    @classmethod
+    def get_unit(cls, observation_concept: ObservationConcept) -> UnitConcept:
+        oura_concept = cls.mapped_from(observation_concept)
+        assert isinstance(oura_concept, OuraConcept)
+        return oura_concept.unit
+
+    @property
+    def unit(self,):
+        ontology = Ontology()
+        return ontology.get_unit(self)

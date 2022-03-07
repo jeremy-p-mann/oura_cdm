@@ -106,7 +106,6 @@ class ObservationTransformer():
         return float(self.get_value_source_value(index, concept))
 
     def get_value_source_value(self, index: int, concept: ObservationConcept) -> str:
-        # TODO: do this with the ontology
         return str(self.raw_oura_data[index][
             OuraConcept.get_keyword_from_concept(concept)
         ])
@@ -116,4 +115,5 @@ class ObservationTransformer():
 
     def get_unit_concept_id(self, index: int, concept: ObservationConcept) -> int:
         # TODO refactor so that this queries for the units of the source concept
-        return ObservationConcept.get_unit_source_id(concept).value
+        # DOING
+        return OuraConcept.get_unit(concept).value
