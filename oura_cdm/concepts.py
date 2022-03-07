@@ -131,7 +131,7 @@ class UnitConcept(Concept, IntEnum):
 
 
 class PhysicalConcept(Concept, IntEnum):
-    # TODO rename to property concepts
+    # TODO make sure all of these have units
     DATE = 4260905
     # TIME = 4256606
 
@@ -152,6 +152,9 @@ class OuraConcept(Concept, IntEnum):
         ontology = Ontology()
         translation = {}
         for concept in cls:
-            standard_concept = ontology.maps_to(concept)
-            translation[standard_concept] = concept
+            translated_concept = ontology.maps_to(concept)
+            translation[translated_concept] = concept
         return translation[standard_concept].concept_name
+
+    # TODO make sure all of these have units
+
