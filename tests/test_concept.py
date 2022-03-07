@@ -1,6 +1,6 @@
 import pytest
 
-from oura_cdm.concepts import (Concept, ObservationConcept, OuraConcept,
+from oura_cdm.concepts import (Concept, ObservationConcept, OuraConcept, PhysicalConcept,
                                ObservationTypeConcept, UnitConcept)
 
 
@@ -74,3 +74,9 @@ def test_concept_name_matches_enum_name(concept, ontology):
 def test_every_oura_concept_maps_to_standard_concept(oura_concept, ontology):
     concept = ontology.maps_to(oura_concept)
     assert concept.is_standard
+
+
+def test_oura_date_keyword(ontology):
+    keyword = OuraConcept.get_keyword_from_concept(PhysicalConcept.DATE)
+    assert 'date' in keyword.split('_')
+

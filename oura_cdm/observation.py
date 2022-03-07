@@ -5,7 +5,7 @@ from typing import Dict, List
 import pandas as pd
 
 from oura_cdm.concepts import (ObservationConcept, ObservationTypeConcept,
-                               OuraConcept)
+                               OuraConcept, PhysicalConcept)
 from oura_cdm.logs import log_info, log_warning
 
 log_info_o = partial(log_info, **{'name': __name__})
@@ -94,8 +94,8 @@ class ObservationTransformer():
         return ans
 
     def get_observation_date(self, index: int) -> str:
-        # TODO: do this with the ontology
-        return self.raw_oura_data[index][OuraConcept.SUMMARY_DATE.concept_name]
+        keyword = OuraConcept.get_keyword_from_concept(PhysicalConcept.DATE)
+        return self.raw_oura_data[index][keyword]
 
     def get_observation_id(
         self, sleep_concept: ObservationConcept, index: int

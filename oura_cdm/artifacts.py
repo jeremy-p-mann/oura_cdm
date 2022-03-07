@@ -17,7 +17,7 @@ class Artifact(str, Enum):
 
     @classmethod
     def validate_function(cls, artifact: Artifact):
-        # TODO use this as a for loop in the artifacts
+        # TODO use this as a for loop in the write artifacts
         return {
             Artifact.JOURNEY: f'{Artifact.JOURNEY}.csv',
             Artifact.SOURCE_DATA: f'{Artifact.SOURCE_DATA}.json',
