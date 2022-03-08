@@ -25,15 +25,9 @@ class Concept(IntEnum):
     def get_concepts(cls) -> List[Concept]:
         return [c for c in cls]
 
-
-    @property
-    def concept_name(self) -> str:
-        return Ontology().get_concept_name(self)
-
     @property
     def is_standard(self) -> bool:
         return Ontology().get_standard_concept(self) == 'S'
-
 
 
 @dataclass
