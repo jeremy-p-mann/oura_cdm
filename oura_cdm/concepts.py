@@ -25,10 +25,6 @@ class Concept(IntEnum):
     def get_concepts(cls) -> List[Concept]:
         return [c for c in cls]
 
-    @property
-    def is_standard(self) -> bool:
-        return Ontology().get_standard_concept(self) == 'S'
-
 
 @dataclass
 class Ontology():
@@ -55,6 +51,10 @@ class Ontology():
     def get_standard_concept(self, concept: Concept) -> str:
         assert self.is_valid(concept), 'concept not supported'
         return self._concept_df.loc[concept.value, 'standard_concept']
+
+    def is_standard(self, concept: Concept) -> str:
+        assert self.is_valid(concept), 'concept not supported'
+        return self.get_standard_concept(concept) == 'S'
 
     def get_domain_id(self, concept: Concept) -> str:
         assert self.is_valid(concept), 'concept not supported'

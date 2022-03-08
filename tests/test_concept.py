@@ -74,7 +74,7 @@ def test_concept_name_matches_enum_name(concept, ontology):
 
 def test_every_oura_concept_maps_to_standard_concept(oura_concept, ontology):
     concept = ontology.maps_to(oura_concept)
-    assert concept.is_standard
+    assert ontology.is_standard(concept)
 
 
 def test_oura_date_keyword(ontology):
