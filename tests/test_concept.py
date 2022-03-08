@@ -78,13 +78,15 @@ def test_every_oura_concept_maps_to_standard_concept(oura_concept, ontology):
 
 
 def test_oura_date_keyword(ontology):
-    keyword = OuraConcept.get_keyword_from_concept(PhysicalConcept.DATE)
+    concept = ontology.mapped_from(PhysicalConcept.DATE)
+    keyword = ontology.get_concept_code(concept)
     assert 'date' in keyword.split('_')
 
 
 def test_all_oura_concepts_mapping_to_observation_concepts_have_units(
-        observation_concept):
-    assert isinstance(OuraConcept.get_unit(observation_concept), UnitConcept)
+        observation_concept, ontology):
+    concept = ontology.mapped_from(observation_concept)
+    assert isinstance(ontology.get_unit(concept), UnitConcept)
 
 
 def test_ontology_dfs_fit_schemas():

@@ -7,13 +7,16 @@ from oura_cdm.schemas import ObservationSchema
 
 
 @pytest.fixture
-def raw_observation_value(raw_observation, observation_concept):
-    return raw_observation[OuraConcept.get_keyword_from_concept(observation_concept)]
+def raw_observation_value(raw_observation, observation_concept, ontology):
+    oura_concept = ontology.mapped_from(observation_concept)
+    keyword = ontology.get_concept_code(oura_concept)
+    return raw_observation[keyword]
 
 
 @pytest.fixture
-def raw_observation_date(raw_observation):
-    return raw_observation[OuraConcept.SUMMARY_DATE.concept_name]
+def raw_observation_date(raw_observation, ontology):
+    keyword = ontology.get_concept_code(OuraConcept.SUMMARY_DATE)
+    return raw_observation[keyword]
 
 
 @pytest.fixture(params=list(ObservationConcept))
@@ -57,10 +60,11 @@ def test_source_value(observation_dict, raw_observation_value):
     assert raw_observation_value == expected
 
 
-def test_units(observation_dict, observation_concept):
+def test_units(observation_dict, observation_concept, ontology):
     unit_id = observation_dict['unit_concept_id']
-    assert unit_id == OuraConcept.get_unit(
-        observation_concept).value
+    oura_concept = ontology.mapped_from(observation_concept)
+    unit = ontology.get_unit(oura_concept)
+    assert unit_id == unit.value
 
 
 def test_observation_type_is_valid(observation_dict):

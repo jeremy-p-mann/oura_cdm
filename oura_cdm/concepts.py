@@ -54,6 +54,10 @@ class Ontology():
         assert self.is_valid(concept), 'concept not supported'
         return self._concept_df.loc[concept.value, 'concept_name']
 
+    def get_concept_code(self, concept: Concept) -> str:
+        assert self.is_valid(concept), 'concept not supported'
+        return self._concept_df.loc[concept.value, 'concept_code']
+
     def get_standard_concept(self, concept: Concept) -> str:
         assert self.is_valid(concept), 'concept not supported'
         return self._concept_df.loc[concept.value, 'standard_concept']
@@ -78,6 +82,13 @@ class Ontology():
     def maps_to(self, concept: Concept) -> Concept:
         maps_to_df = self._concept_relationship_df.loc[[concept.value], :]
         ans_ids = maps_to_df[maps_to_df.relationship_id == 'Maps to'].concept_id_2
+        assert len(ans_ids) == 1
+        ans_id = ans_ids.iloc[0]
+        return self.get_concept_from_id(ans_id)
+
+    def mapped_from(self, concept: Concept) -> Concept:
+        maps_to_df = self._concept_relationship_df.loc[[concept.value], :]
+        ans_ids = maps_to_df[maps_to_df.relationship_id == 'Mapped from'].concept_id_2
         assert len(ans_ids) == 1
         ans_id = ans_ids.iloc[0]
         return self.get_concept_from_id(ans_id)
@@ -153,42 +164,6 @@ class OuraConcept(Concept, IntEnum):
     DEEP = 8197349815
     LIGHT = 8197349816
     TOTAL = 8197349817
-
-    @classmethod
-    def get_keyword_from_concept(cls, standard_concept: Concept):
-        assert standard_concept.is_standard
-        return cls.get_mapped_from()[standard_concept].concept_name
-
-    @classmethod
-    def get_mapped_from(cls,) -> Dict[Concept, OuraConcept]:
-        ontology = Ontology()
-        translation: Dict[Concept, OuraConcept] = {}
-        for concept in cls:
-            standard_concept = ontology.maps_to(concept)
-            translation[standard_concept] = concept
-        return translation
-
-    @classmethod
-    def mapped_from(cls, concept: Concept) -> Concept:
-        return cls.get_mapped_from()[concept]
-
-    @classmethod
-    def get_maps_to(cls,) -> Dict[OuraConcept, Concept]:
-        translation: Dict[OuraConcept, Concept] = {
-            value: key for key, value in cls.get_mapped_from().items()
-        }
-        return translation
-
-    @classmethod
-    def get_unit(cls, observation_concept: ObservationConcept) -> UnitConcept:
-        oura_concept = cls.mapped_from(observation_concept)
-        assert isinstance(oura_concept, OuraConcept)
-        return oura_concept.unit
-
-    @property
-    def unit(self,):
-        ontology = Ontology()
-        return ontology.get_unit(self)
 
 
 def get_ontology_dfs() -> Tuple[pd.DataFrame, pd.DataFrame]:

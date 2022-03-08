@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import pandas as pd
 
-from oura_cdm.concepts import (ObservationConcept, ObservationTypeConcept,
+from oura_cdm.concepts import (ObservationConcept, ObservationTypeConcept, Ontology,
                                OuraConcept, PhysicalConcept)
 from oura_cdm.logs import log_info, log_warning
 
@@ -67,6 +67,7 @@ class ObservationTransformer():
     # TODO: make the parameters the source data, ontology, and the vocabulary
     # id of the source vocabulary.
     raw_oura_data: List[Dict]
+    ontology: Ontology = Ontology()
 
     def get_transformed_data(self,) -> pd.DataFrame:
         mock_row = get_mock_row()
@@ -94,7 +95,8 @@ class ObservationTransformer():
         return ans
 
     def get_observation_date(self, index: int) -> str:
-        keyword = OuraConcept.get_keyword_from_concept(PhysicalConcept.DATE)
+        oura_date_concept = self.ontology.mapped_from(PhysicalConcept.DATE)
+        keyword = self.ontology.get_concept_code(oura_date_concept)
         return self.raw_oura_data[index][keyword]
 
     def get_observation_id(
@@ -106,8 +108,9 @@ class ObservationTransformer():
         return float(self.get_value_source_value(index, concept))
 
     def get_value_source_value(self, index: int, concept: ObservationConcept) -> str:
+        oura_concept = self.ontology.mapped_from(concept)
         return str(self.raw_oura_data[index][
-            OuraConcept.get_keyword_from_concept(concept)
+            self.ontology.get_concept_code(oura_concept)
         ])
 
     def get_observation_type_id(self, index: int, concept: ObservationConcept) -> int:
@@ -115,4 +118,5 @@ class ObservationTransformer():
         return ObservationTypeConcept.LAB.value
 
     def get_unit_concept_id(self, index: int, concept: ObservationConcept) -> int:
-        return OuraConcept.get_unit(concept).value
+        oura_concept = self.ontology.mapped_from(concept)
+        return self.ontology.get_unit(oura_concept).value
