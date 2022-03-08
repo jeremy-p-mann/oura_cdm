@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import pkg_resources
 from functools import cached_property
 from enum import Enum, IntEnum
-from typing import List, Type, Dict
+from typing import List, Type, Dict, Tuple
 
 import pandas as pd
 
@@ -189,3 +189,9 @@ class OuraConcept(Concept, IntEnum):
     def unit(self,):
         ontology = Ontology()
         return ontology.get_unit(self)
+
+
+def get_ontology_dfs() -> Tuple[pd.DataFrame, pd.DataFrame]:
+    concept_df = Ontology()._concept_df
+    concept_relationship_df = Ontology()._concept_relationship_df
+    return concept_df, concept_relationship_df

@@ -24,22 +24,42 @@ def write_artifacts(artifacts: Dict[str, Any], target_folder_name: str):
     journey_filename = Artifact.get_filename(Artifact.JOURNEY)
     journey_filepath = \
         f'{target_folder_name}/{journey_filename}'
+    concept_data_filename = Artifact.get_filename(Artifact.CONCEPT)
+    cr_data_filename = Artifact.get_filename(Artifact.CONCEPT_RELATIONSHIP)
+    concept_data_filepath = \
+        f'{target_folder_name}/{concept_data_filename}'
+    concept_relationship_data_filepath = \
+        f'{target_folder_name}/{cr_data_filename}'
+
     log_info_p('Writing observation table')
     artifacts[Artifact.OBSERVATION].to_csv(
         observation_table_filepath,
         sep=CSV_SEP
     )
     log_info_p(f'Observation table written to {observation_table_filepath}')
-    log_info_p('Writing Source Data')
-    with open(source_data_filepath, 'w') as f:
-        json.dump(artifacts[Artifact.SOURCE_DATA], f)
-    artifacts[Artifact.OBSERVATION].to_csv(
+    log_info_p('Writing journey table')
+    artifacts[Artifact.JOURNEY].to_csv(
         journey_filepath,
         sep=CSV_SEP
     )
-    log_info_p(f'Source data written to {source_data_filepath}')
+    log_info_p(f'Journey table written to {journey_filepath}')
     log_info_p('Writing Source Data')
+    with open(source_data_filepath, 'w') as f:
+        json.dump(artifacts[Artifact.SOURCE_DATA], f)
     log_info_p(f'Source data written to {source_data_filepath}')
+
+    log_info_p('Writing Concept Data')
+    artifacts[Artifact.CONCEPT].to_csv(
+        concept_data_filepath,
+        sep=CSV_SEP
+    )
+    log_info_p(f'Concept data written to {concept_data_filepath}')
+    log_info_p('Writing Concept Relationship Data')
+    artifacts[Artifact.CONCEPT_RELATIONSHIP].to_csv(
+        concept_relationship_data_filepath,
+        sep=CSV_SEP
+    )
+    log_info_p(f'Concept Relationship data written to {concept_relationship_data_filepath}')
     log_info_p(
         f'Artifacts Successfully written to folder {target_folder_name}')
 

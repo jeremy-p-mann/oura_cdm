@@ -1,7 +1,8 @@
 import pytest
 
 from oura_cdm.concepts import (Concept, ObservationConcept, OuraConcept, PhysicalConcept,
-                               ObservationTypeConcept, UnitConcept)
+                               ObservationTypeConcept, UnitConcept, get_ontology_dfs)
+from oura_cdm.schemas import ConceptSchema, ConceptRelationshipSchema
 
 
 @pytest.fixture(params=Concept.get_all_concepts())
@@ -84,3 +85,10 @@ def test_oura_date_keyword(ontology):
 def test_all_oura_concepts_mapping_to_observation_concepts_have_units(
         observation_concept):
     assert isinstance(OuraConcept.get_unit(observation_concept), UnitConcept)
+
+
+def test_ontology_dfs_fit_schemas():
+    concept_df, concept_relationship_df = get_ontology_dfs()
+    ConceptSchema.validate(concept_df)
+    ConceptRelationshipSchema.validate(concept_relationship_df)
+

@@ -52,10 +52,6 @@ def make_dashboard():
         + melted_journey_df['observation_concept_id'].astype(str)
     )
 
-    st.title("Observation Table")
-    st.write(observation_df)
-    st.title("Source Data (Sample)")
-    st.write(source_data[0])
     st.title("Observation Graph")
 
     width = min(len(melted_journey_df) * 10, 500)
@@ -71,6 +67,15 @@ def make_dashboard():
 
     st.altair_chart(chart)
 
+    st.title("Observation Table")
+    st.table(observation_df.head(5))
+    st.title("Source Data")
+    st.write(source_data[0])
+    st.title("Ontology Tables")
+    st.title("Concepts")
+    st.table(artifacts[Artifact.CONCEPT].reset_index())
+    st.title("Concept Relationships")
+    st.table(artifacts[Artifact.CONCEPT_RELATIONSHIP].reset_index())
 
 if __name__ == '__main__':
     make_dashboard()
