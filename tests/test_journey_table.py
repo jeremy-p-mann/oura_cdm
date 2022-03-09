@@ -25,11 +25,10 @@ def test_n_journeys(journey_df, oura_data):
 
 
 def test_observation_value_at_date(
-        observation_concept, journey_df, raw_observation):
+        ontology, observation_concept, journey_df, raw_observation):
     date = raw_observation['summary_date']
-    expected_value = raw_observation[
-        OuraConcept.get_keyword_from_concept(observation_concept)
-    ]
+    keyword = ontology.get_concept_code(ontology.mapped_from(observation_concept))
+    expected_value = raw_observation[keyword]
     expected = expected_value \
         * ObservationConcept.get_reference_value(observation_concept)
     actual = journey_df.loc[date, observation_concept.value]

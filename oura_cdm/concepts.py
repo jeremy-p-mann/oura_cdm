@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import pkg_resources
 from functools import cached_property
 from enum import Enum, IntEnum
-from typing import List, Type, Dict
+from typing import List, Type, Dict, Tuple
 
 import pandas as pd
 
@@ -26,16 +26,6 @@ class Concept(IntEnum):
         return [c for c in cls]
 
 
-    @property
-    def concept_name(self) -> str:
-        return Ontology().get_concept_name(self)
-
-    @property
-    def is_standard(self) -> bool:
-        return Ontology().get_standard_concept(self) == 'S'
-
-
-
 @dataclass
 class Ontology():
     @cached_property
@@ -54,9 +44,17 @@ class Ontology():
         assert self.is_valid(concept), 'concept not supported'
         return self._concept_df.loc[concept.value, 'concept_name']
 
+    def get_concept_code(self, concept: Concept) -> str:
+        assert self.is_valid(concept), 'concept not supported'
+        return self._concept_df.loc[concept.value, 'concept_code']
+
     def get_standard_concept(self, concept: Concept) -> str:
         assert self.is_valid(concept), 'concept not supported'
         return self._concept_df.loc[concept.value, 'standard_concept']
+
+    def is_standard(self, concept: Concept) -> str:
+        assert self.is_valid(concept), 'concept not supported'
+        return self.get_standard_concept(concept) == 'S'
 
     def get_domain_id(self, concept: Concept) -> str:
         assert self.is_valid(concept), 'concept not supported'
@@ -78,6 +76,13 @@ class Ontology():
     def maps_to(self, concept: Concept) -> Concept:
         maps_to_df = self._concept_relationship_df.loc[[concept.value], :]
         ans_ids = maps_to_df[maps_to_df.relationship_id == 'Maps to'].concept_id_2
+        assert len(ans_ids) == 1
+        ans_id = ans_ids.iloc[0]
+        return self.get_concept_from_id(ans_id)
+
+    def mapped_from(self, concept: Concept) -> Concept:
+        maps_to_df = self._concept_relationship_df.loc[[concept.value], :]
+        ans_ids = maps_to_df[maps_to_df.relationship_id == 'Mapped from'].concept_id_2
         assert len(ans_ids) == 1
         ans_id = ans_ids.iloc[0]
         return self.get_concept_from_id(ans_id)
@@ -154,38 +159,9 @@ class OuraConcept(Concept, IntEnum):
     LIGHT = 8197349816
     TOTAL = 8197349817
 
-    @classmethod
-    def get_keyword_from_concept(cls, standard_concept: Concept):
-        assert standard_concept.is_standard
-        return cls.get_mapped_from()[standard_concept].concept_name
 
-    @classmethod
-    def get_mapped_from(cls,) -> Dict[Concept, OuraConcept]:
-        ontology = Ontology()
-        translation: Dict[Concept, OuraConcept] = {}
-        for concept in cls:
-            standard_concept = ontology.maps_to(concept)
-            translation[standard_concept] = concept
-        return translation
-
-    @classmethod
-    def mapped_from(cls, concept: Concept) -> Concept:
-        return cls.get_mapped_from()[concept]
-
-    @classmethod
-    def get_maps_to(cls,) -> Dict[OuraConcept, Concept]:
-        translation: Dict[OuraConcept, Concept] = {
-            value: key for key, value in cls.get_mapped_from().items()
-        }
-        return translation
-
-    @classmethod
-    def get_unit(cls, observation_concept: ObservationConcept) -> UnitConcept:
-        oura_concept = cls.mapped_from(observation_concept)
-        assert isinstance(oura_concept, OuraConcept)
-        return oura_concept.unit
-
-    @property
-    def unit(self,):
-        ontology = Ontology()
-        return ontology.get_unit(self)
+def get_ontology_dfs() -> Tuple[pd.DataFrame, pd.DataFrame]:
+    ontology = Ontology()
+    concept_df = ontology._concept_df
+    concept_relationship_df = ontology._concept_relationship_df
+    return concept_df, concept_relationship_df

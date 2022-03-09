@@ -11,9 +11,7 @@ def write_test_file(pipeline_artifacts,):
     test_target_folder_name = 'write_test_folder'
     old_files = os.listdir()
     write_artifacts(pipeline_artifacts, test_target_folder_name)
-    print('yielding')
     yield test_target_folder_name
-    print('yielded')
     clean_up_run(test_target_folder_name)
     assert old_files == os.listdir()
 

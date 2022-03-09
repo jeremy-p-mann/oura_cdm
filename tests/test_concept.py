@@ -1,7 +1,8 @@
 import pytest
 
 from oura_cdm.concepts import (Concept, ObservationConcept, OuraConcept, PhysicalConcept,
-                               ObservationTypeConcept, UnitConcept)
+                               ObservationTypeConcept, UnitConcept, get_ontology_dfs)
+from oura_cdm.schemas import ConceptSchema, ConceptRelationshipSchema
 
 
 @pytest.fixture(params=Concept.get_all_concepts())
@@ -60,10 +61,10 @@ def test_get_concept_id_from_name(ontology, concept):
 
 
 def test_concept_name_matches_enum_name(concept, ontology):
-    concept_name = concept.concept_name
+    concept_name = ontology.get_concept_name(concept)
     if ' ' in concept_name:
         actual_terms = {
-            term.lower() for term in concept.concept_name.split(' ')
+            term.lower() for term in concept_name.split(' ')
         }
         expected_terms = {term.lower() for term in concept.name.split('_')}
         assert actual_terms.issubset(expected_terms)
@@ -73,14 +74,23 @@ def test_concept_name_matches_enum_name(concept, ontology):
 
 def test_every_oura_concept_maps_to_standard_concept(oura_concept, ontology):
     concept = ontology.maps_to(oura_concept)
-    assert concept.is_standard
+    assert ontology.is_standard(concept)
 
 
 def test_oura_date_keyword(ontology):
-    keyword = OuraConcept.get_keyword_from_concept(PhysicalConcept.DATE)
+    concept = ontology.mapped_from(PhysicalConcept.DATE)
+    keyword = ontology.get_concept_code(concept)
     assert 'date' in keyword.split('_')
 
 
 def test_all_oura_concepts_mapping_to_observation_concepts_have_units(
-        observation_concept):
-    assert isinstance(OuraConcept.get_unit(observation_concept), UnitConcept)
+        observation_concept, ontology):
+    concept = ontology.mapped_from(observation_concept)
+    assert isinstance(ontology.get_unit(concept), UnitConcept)
+
+
+def test_ontology_dfs_fit_schemas():
+    concept_df, concept_relationship_df = get_ontology_dfs()
+    ConceptSchema.validate(concept_df)
+    ConceptRelationshipSchema.validate(concept_relationship_df)
+
