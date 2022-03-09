@@ -36,7 +36,7 @@ def test_units_are_units(ontology, unit_concept):
     assert domain_id == UnitConcept.get_domain_id()
 
 
-def test_observation_concepts_are_concepts(ontology, observation_concept):
+def test_observation_concepts_domain(ontology, observation_concept):
     domain_id = ontology.get_domain_id(observation_concept)
     assert domain_id == ObservationConcept.get_domain_id()
 

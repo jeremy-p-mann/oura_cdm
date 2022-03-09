@@ -33,8 +33,7 @@ def validate_run(artifacts: Dict[str, Any]):
     log_info_p('Observation data valid')
 
 
-def run(target_folder_name: str):
-    # TODO This doesn't need target folder why is it here
+def run(**kwargs):
     log_info_p('Beginning Run')
     raw_oura_data = get_oura_data()
     observation_df = get_observation_table(raw_oura_data)
