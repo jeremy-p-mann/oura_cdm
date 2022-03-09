@@ -1,5 +1,4 @@
 import altair as alt
-import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -10,7 +9,7 @@ from oura_cdm.pipeline import run
 
 @st.cache
 def get_artifacts():
-    return run('test_data')
+    return run()
 
 
 def make_dashboard():
