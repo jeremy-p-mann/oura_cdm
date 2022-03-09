@@ -75,10 +75,3 @@ def test_observation_type_is_valid(observation_dict):
 def test_no_entries_to_calculuate(oura_data):
     observation_df = get_observation_table(oura_data[:0])
     assert len(observation_df) == 0
-
-
-@pytest.mark.skip
-def test_observation_datetime(
-        observation_dict
-):
-    assert False
