@@ -161,6 +161,7 @@ class OuraConcept(Concept, IntEnum):
 
 
 def get_ontology_dfs() -> Tuple[pd.DataFrame, pd.DataFrame]:
-    concept_df = Ontology()._concept_df
-    concept_relationship_df = Ontology()._concept_relationship_df
+    ontology = Ontology()
+    concept_df = ontology._concept_df
+    concept_relationship_df = ontology._concept_relationship_df
     return concept_df, concept_relationship_df
