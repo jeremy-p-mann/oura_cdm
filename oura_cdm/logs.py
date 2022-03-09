@@ -16,6 +16,7 @@ def get_logger(name: str) -> Logger:
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
     LOGGERS[name] = logger
+    logger.propagate = False
     return logger
 
 
